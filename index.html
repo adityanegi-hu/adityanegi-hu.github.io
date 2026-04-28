@@ -34,12 +34,6 @@ body{
   cursor:none;
 }
 
-/* === CURSOR === */
-#cur{position:fixed;width:10px;height:10px;background:var(--a1);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .15s,height .15s,opacity .15s;box-shadow:var(--glow1)}
-#cur-ring{position:fixed;width:40px;height:40px;border:1.5px solid var(--a1);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:left .08s,top .08s,width .2s,height .2s;opacity:.4}
-#cur.big{width:20px;height:20px}
-#cur-ring.big{width:60px;height:60px;opacity:.2}
-
 /* === NOISE + SCANLINES === */
 body::before{content:'';position:fixed;inset:0;z-index:8900;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.04) 3px,rgba(0,0,0,.04) 4px);pointer-events:none}
 body::after{content:'';position:fixed;inset:0;z-index:8800;opacity:.35;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E");pointer-events:none}
