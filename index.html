@@ -31,8 +31,9 @@ body{
   color:var(--text);
   font-family:'Syne',sans-serif;
   overflow-x:hidden;
-  cursor:none;
 }
+
+
 
 /* === NOISE + SCANLINES === */
 body::before{content:'';position:fixed;inset:0;z-index:8900;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.04) 3px,rgba(0,0,0,.04) 4px);pointer-events:none}
@@ -620,8 +621,7 @@ footer .fr{text-align:right}
 
 <div id="grid-bg"></div>
 <canvas id="cvs"></canvas>
-<div id="cur"></div>
-<div id="cur-ring"></div>
+
 
 <!-- NAV -->
 <nav>
@@ -1027,20 +1027,7 @@ footer .fr{text-align:right}
 </footer>
 
 <script>
-/* === CURSOR === */
-const cur = document.getElementById('cur');
-const ring = document.getElementById('cur-ring');
-let mx=0, my=0, rx=0, ry=0;
-document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; cur.style.left=mx+'px'; cur.style.top=my+'px'; });
-(function animRing(){
-  rx += (mx-rx)*.1; ry += (my-ry)*.1;
-  ring.style.left=rx+'px'; ring.style.top=ry+'px';
-  requestAnimationFrame(animRing);
-})();
-document.querySelectorAll('a,button').forEach(el=>{
-  el.addEventListener('mouseenter',()=>{cur.classList.add('big');ring.classList.add('big')});
-  el.addEventListener('mouseleave',()=>{cur.classList.remove('big');ring.classList.remove('big')});
-});
+
 
 /* === PARTICLES === */
 const cvs = document.getElementById('cvs');
