@@ -3,617 +3,1355 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Aditya Negi — Developer & Cybersecurity Enthusiast</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<title>Aditya Negi — Network Systems & Security Engineer | Full-Stack Builder</title>
+<meta name="description" content="Portfolio of Aditya Negi — Network Systems & Security Engineer, Network Automation specialist, and Full-Stack Developer. Featuring interactive network packet simulator, live CLI, and DPI tooling."/>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
 <style>
-:root{
-  --bg:#020509;
-  --bg2:#050d14;
-  --surface:#071522;
-  --border:#0e3248;
-  --border2:#1a4a6a;
-  --a1:#00ffe0;
-  --a2:#0080ff;
-  --a3:#ff2a6d;
-  --a4:#ffd700;
-  --text:#b8d8e8;
-  --muted:#3a6070;
-  --white:#e8f4fa;
-  --glow1:0 0 20px #00ffe070;
-  --glow2:0 0 30px #0080ff60;
-  --glow3:0 0 24px #ff2a6d60;
+:root {
+  --bg-primary: #02060d;
+  --bg-secondary: #050f1a;
+  --bg-card: rgba(8, 22, 38, 0.75);
+  --bg-card-hover: rgba(12, 32, 54, 0.9);
+  --border-subtle: #0d2840;
+  --border-glow: #1a4d78;
+  --border-active: #00ffe0;
+  
+  --cyan: #00ffe0;
+  --cyan-glow: rgba(0, 255, 224, 0.4);
+  --blue: #0088ff;
+  --blue-glow: rgba(0, 136, 255, 0.35);
+  --green: #10f49c;
+  --green-glow: rgba(16, 244, 156, 0.4);
+  --amber: #ffb800;
+  --crimson: #ff3366;
+  --crimson-glow: rgba(255, 51, 102, 0.4);
+  --purple: #9d4edd;
+  
+  --text-main: #f0f7fc;
+  --text-muted: #7e9bb0;
+  --text-dim: #41617a;
+  
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-space: 'Space Mono', monospace;
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  
+  --glow-cyan: 0 0 25px rgba(0, 255, 224, 0.35);
+  --glow-blue: 0 0 30px rgba(0, 136, 255, 0.35);
+  --glow-crimson: 0 0 25px rgba(255, 51, 102, 0.35);
 }
 
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:'Syne',sans-serif;
-  overflow-x:hidden;
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-
-
-/* === NOISE + SCANLINES === */
-body::before{content:'';position:fixed;inset:0;z-index:8900;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.04) 3px,rgba(0,0,0,.04) 4px);pointer-events:none}
-body::after{content:'';position:fixed;inset:0;z-index:8800;opacity:.35;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E");pointer-events:none}
-
-/* === GRID BG === */
-#grid-bg{position:fixed;inset:0;z-index:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:56px 56px;opacity:.15}
-
-/* === CANVAS === */
-#cvs{position:fixed;inset:0;z-index:1;pointer-events:none}
-
-/* === NAV === */
-nav{
-  position:fixed;top:0;left:0;right:0;z-index:500;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:18px 60px;
-  background:rgba(2,5,9,.88);
-  border-bottom:1px solid var(--border);
-  backdrop-filter:blur(16px);
-}
-.logo{
-  font-family:'Space Mono',monospace;
-  font-weight:700;
-  font-size:1.1rem;
-  letter-spacing:.15em;
-  color:var(--a1);
-  text-shadow:var(--glow1);
-}
-.logo em{color:var(--a3);font-style:normal}
-nav ul{list-style:none;display:flex;gap:36px}
-nav a{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.78rem;
-  color:var(--muted);
-  text-decoration:none;
-  letter-spacing:.08em;
-  transition:color .2s;
-  position:relative;
-}
-nav a::after{content:'';position:absolute;bottom:-3px;left:0;width:0;height:1px;background:var(--a1);transition:width .3s}
-nav a:hover{color:var(--a1)}
-nav a:hover::after{width:100%}
-.nav-status{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.72rem;
-  color:var(--a1);
-  display:flex;align-items:center;gap:6px;
-}
-.status-dot{width:7px;height:7px;background:#22ff88;border-radius:50%;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 #22ff8870}50%{box-shadow:0 0 0 6px transparent}}
-
-/* === HERO === */
-#hero{
-  min-height:100vh;
-  display:flex;align-items:center;
-  position:relative;z-index:2;
-  padding:110px 0 80px;
-}
-.container{max-width:1140px;margin:0 auto;padding:0 48px}
-.hero-wrap{
-  display:grid;
-  grid-template-columns:1.1fr 1fr;
-  gap:72px;
-  align-items:center;
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
 }
 
-/* Left side */
-.hero-badge{
-  display:inline-flex;align-items:center;gap:8px;
-  font-family:'JetBrains Mono',monospace;
-  font-size:.72rem;
-  letter-spacing:.2em;
-  color:var(--a1);
-  border:1px solid var(--border2);
-  padding:6px 14px;
-  border-radius:2px;
-  margin-bottom:24px;
-  background:rgba(0,255,224,.04);
-  opacity:0;animation:riseUp .6s .1s forwards;
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  overflow-x: hidden;
+  background-image: 
+    radial-gradient(circle at 15% 15%, rgba(0, 136, 255, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 85% 65%, rgba(0, 255, 224, 0.06) 0%, transparent 45%),
+    radial-gradient(circle at 50% 90%, rgba(255, 51, 102, 0.04) 0%, transparent 40%);
 }
-.hero-badge::before{content:'▶';font-size:.6rem;color:var(--a3)}
 
-.hero-name{
-  font-family:'Syne',sans-serif;
-  font-weight:800;
-  font-size:clamp(3rem,6vw,5.2rem);
-  line-height:1;
-  letter-spacing:-.02em;
-  color:var(--white);
-  margin-bottom:8px;
-  opacity:0;animation:riseUp .7s .25s forwards;
+/* CRT Scanlines & Cyber Grid Overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0, 0, 0, 0.18) 3px, rgba(0, 0, 0, 0.18) 4px);
+  pointer-events: none;
+  opacity: 0.6;
 }
-.hero-name .accent{
-  display:block;
-  background:linear-gradient(135deg,var(--a1),var(--a2));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-  text-shadow:none;
-  position:relative;
-}
-.hero-name .accent::after{
-  content:attr(data-text);
-  position:absolute;left:2px;top:2px;
-  background:linear-gradient(135deg,var(--a3),var(--a2));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  background-clip:text;
-  animation:glitch 4s 2s infinite;
-  opacity:0;
-}
-@keyframes glitch{0%,92%,100%{opacity:0;transform:none}93%{opacity:.7;transform:translateX(-3px)}96%{opacity:.5;transform:translateX(3px)}}
 
-.hero-role{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.9rem;
-  color:var(--muted);
-  letter-spacing:.05em;
-  margin-bottom:28px;
-  opacity:0;animation:riseUp .6s .4s forwards;
+#grid-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-size: 48px 48px;
+  background-image: 
+    linear-gradient(to right, rgba(13, 40, 64, 0.3) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(13, 40, 64, 0.3) 1px, transparent 1px);
+  pointer-events: none;
 }
-.hero-role span{color:var(--a3)}
 
-.hero-desc{
-  font-size:1.05rem;
-  color:var(--muted);
-  line-height:1.75;
-  max-width:460px;
-  margin-bottom:40px;
-  opacity:0;animation:riseUp .6s .55s forwards;
+#cvs {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
 }
-.hero-desc strong{color:var(--text)}
 
-.cta-group{display:flex;gap:14px;flex-wrap:wrap;opacity:0;animation:riseUp .6s .7s forwards}
-.btn{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.78rem;
-  letter-spacing:.08em;
-  padding:13px 28px;
-  border-radius:3px;
-  text-decoration:none;
-  transition:all .25s;
-  display:inline-flex;align-items:center;gap:8px;
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+  position: relative;
+  z-index: 2;
 }
-.btn-fill{background:var(--a1);color:#020509;border:1px solid var(--a1)}
-.btn-fill:hover{background:transparent;color:var(--a1);box-shadow:var(--glow1),inset 0 0 20px rgba(0,255,224,.05)}
-.btn-outline{background:transparent;color:var(--a2);border:1px solid var(--a2)}
-.btn-outline:hover{background:var(--a2);color:#020509;box-shadow:var(--glow2)}
-.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border2)}
-.btn-ghost:hover{border-color:var(--a3);color:var(--a3);box-shadow:var(--glow3)}
 
-/* Terminal */
-.terminal{
-  background:rgba(5,13,20,.95);
-  border:1px solid var(--border2);
-  border-radius:10px;
-  overflow:hidden;
-  box-shadow:0 32px 100px rgba(0,0,0,.7),var(--glow2);
-  opacity:0;animation:riseUp .8s .5s forwards;
-  position:relative;
+/* === NOC LIVE TELEMETRY TICKER === */
+.noc-ticker {
+  background: rgba(3, 10, 18, 0.95);
+  border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  padding: 6px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(12px);
 }
-.terminal::before{
-  content:'';
-  position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--a1),var(--a2),transparent);
+.ticker-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  white-space: nowrap;
 }
-.t-bar{
-  background:#071a28;
-  padding:12px 18px;
-  display:flex;align-items:center;gap:8px;
-  border-bottom:1px solid var(--border);
+.ticker-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(16, 244, 156, 0.12);
+  color: var(--green);
+  padding: 2px 8px;
+  border-radius: 3px;
+  border: 1px solid rgba(16, 244, 156, 0.3);
+  font-weight: 600;
+  font-size: 0.68rem;
 }
-.dot{width:11px;height:11px;border-radius:50%}
-.dot.r{background:#ff5f57}.dot.y{background:#ffbd2e}.dot.g{background:#28c840}
-.t-title{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);margin-left:auto}
-.t-body{padding:24px 24px 28px;font-family:'JetBrains Mono',monospace;font-size:.82rem;line-height:2}
-.t-line{display:flex;gap:10px;margin-bottom:1px}
-.t-prompt{color:var(--a1);flex-shrink:0}
-.t-cmd{color:var(--white)}
-.t-out{color:var(--muted);padding-left:20px}
-.t-k{color:var(--a2)}
-.t-v{color:var(--a1)}
-.t-v2{color:var(--a4)}
-.blink{display:inline-block;width:8px;height:15px;background:var(--a1);vertical-align:middle;animation:blink 1s step-end infinite}
-@keyframes blink{50%{opacity:0}}
-@keyframes riseUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+.pulse-led {
+  width: 6px;
+  height: 6px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: pulseLed 1.8s infinite;
+}
+@keyframes pulseLed {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(16, 244, 156, 0.8); }
+  50% { box-shadow: 0 0 0 6px rgba(16, 244, 156, 0); }
+}
+.ticker-stream {
+  display: flex;
+  gap: 20px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.ticker-item {
+  color: var(--text-dim);
+}
+.ticker-item span {
+  color: var(--cyan);
+}
+.ticker-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--text-dim);
+  font-size: 0.7rem;
+}
+
+/* === NAVIGATION === */
+nav {
+  position: sticky;
+  top: 31px;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 36px;
+  background: rgba(4, 12, 22, 0.85);
+  border-bottom: 1px solid var(--border-subtle);
+  backdrop-filter: blur(16px);
+  transition: all 0.3s ease;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+.brand-icon {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, rgba(0, 255, 224, 0.15), rgba(0, 136, 255, 0.15));
+  border: 1px solid var(--cyan);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--cyan);
+  font-family: var(--font-space);
+  font-weight: 700;
+  font-size: 0.85rem;
+  box-shadow: var(--glow-cyan);
+}
+.brand-text {
+  font-family: var(--font-space);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+  color: #fff;
+}
+.brand-text span {
+  color: var(--cyan);
+}
+.brand-sub {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--crimson);
+  letter-spacing: 0.15em;
+  display: block;
+  margin-top: -2px;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 26px;
+}
+nav a {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: color 0.2s, text-shadow 0.2s;
+  position: relative;
+  padding: 4px 0;
+}
+nav a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+  transition: width 0.25s ease;
+}
+nav a:hover {
+  color: var(--cyan);
+  text-shadow: 0 0 10px rgba(0, 255, 224, 0.5);
+}
+nav a:hover::after, nav a.active::after {
+  width: 100%;
+}
+nav a.active {
+  color: var(--cyan);
+}
+.nav-cta {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  background: rgba(0, 255, 224, 0.08);
+  border: 1px solid var(--cyan);
+  color: var(--cyan);
+  padding: 6px 14px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.nav-cta:hover {
+  background: var(--cyan);
+  color: #02060d;
+  box-shadow: var(--glow-cyan);
+}
+
+/* === BUTTONS & BADGES === */
+.btn {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 12px 24px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.btn-primary {
+  background: var(--cyan);
+  color: #02060d;
+  border-color: var(--cyan);
+  box-shadow: 0 4px 20px rgba(0, 255, 224, 0.25);
+}
+.btn-primary:hover {
+  background: transparent;
+  color: var(--cyan);
+  box-shadow: var(--glow-cyan), inset 0 0 15px rgba(0, 255, 224, 0.1);
+  transform: translateY(-2px);
+}
+.btn-secondary {
+  background: rgba(0, 136, 255, 0.1);
+  color: var(--blue);
+  border-color: rgba(0, 136, 255, 0.4);
+}
+.btn-secondary:hover {
+  background: var(--blue);
+  color: #fff;
+  box-shadow: var(--glow-blue);
+  transform: translateY(-2px);
+}
+.btn-ghost {
+  background: rgba(13, 40, 64, 0.4);
+  color: var(--text-main);
+  border-color: var(--border-glow);
+}
+.btn-ghost:hover {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  background: rgba(0, 255, 224, 0.05);
+  transform: translateY(-2px);
+}
+.btn-sm {
+  padding: 6px 14px;
+  font-size: 0.72rem;
+}
+
+/* === HERO SECTION === */
+#hero {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  padding: 60px 0 80px;
+  position: relative;
+}
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  color: var(--cyan);
+  background: rgba(0, 255, 224, 0.06);
+  border: 1px solid rgba(0, 255, 224, 0.3);
+  padding: 6px 14px;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+.hero-tag::before {
+  content: '⬢';
+  color: var(--crimson);
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 5.2vw, 4.4rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: #fff;
+  margin-bottom: 14px;
+}
+.hero-title .glow-name {
+  display: inline-block;
+  background: linear-gradient(135deg, #ffffff 20%, var(--cyan) 80%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero-title .sub-accent {
+  display: block;
+  font-size: clamp(1.4rem, 2.8vw, 2.2rem);
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--cyan), var(--blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-top: 6px;
+}
+.hero-role {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.hero-role span.highlight {
+  color: var(--cyan);
+}
+.hero-role span.div {
+  color: var(--crimson);
+}
+.hero-desc {
+  font-size: 1.02rem;
+  color: var(--text-muted);
+  line-height: 1.75;
+  max-width: 540px;
+  margin-bottom: 34px;
+}
+.hero-desc strong {
+  color: #fff;
+  font-weight: 600;
+}
+.hero-cta {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+/* === HERO LIVE TERMINAL === */
+.terminal-card {
+  background: rgba(4, 12, 22, 0.95);
+  border: 1px solid var(--border-glow);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(0, 136, 255, 0.15);
+  position: relative;
+}
+.terminal-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--cyan), var(--blue), var(--crimson));
+}
+.t-header {
+  background: #071728;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+.t-dots {
+  display: flex;
+  gap: 7px;
+}
+.t-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.t-dot.red { background: #ff5f56; }
+.t-dot.yellow { background: #ffbd2e; }
+.t-dot.green { background: #27c93f; }
+.t-body {
+  padding: 18px 20px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.8;
+  min-height: 330px;
+  max-height: 380px;
+  overflow-y: auto;
+  color: var(--text-muted);
+}
+.t-line {
+  margin-bottom: 4px;
+  word-break: break-word;
+}
+.t-prompt {
+  color: var(--cyan);
+  font-weight: 700;
+}
+.t-cmd {
+  color: #fff;
+}
+.t-out {
+  color: var(--text-muted);
+  padding-left: 12px;
+}
+.t-accent { color: var(--cyan); }
+.t-blue { color: var(--blue); }
+.t-green { color: var(--green); }
+.t-warn { color: var(--amber); }
+.t-danger { color: var(--crimson); }
+.t-input-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+.t-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: #fff;
+  flex: 1;
+  caret-color: var(--cyan);
+}
+.t-quick-cmds {
+  display: flex;
+  gap: 6px;
+  padding: 10px 16px;
+  background: #030a12;
+  border-top: 1px solid var(--border-subtle);
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+}
+.quick-cmd-btn {
+  background: rgba(13, 40, 64, 0.6);
+  border: 1px solid var(--border-subtle);
+  color: var(--cyan);
+  padding: 3px 8px;
+  border-radius: 3px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.quick-cmd-btn:hover {
+  background: rgba(0, 255, 224, 0.15);
+  border-color: var(--cyan);
+}
 
 /* === SECTION COMMON === */
-section{position:relative;z-index:2;padding:100px 0}
-.sec-eyebrow{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.72rem;
-  letter-spacing:.25em;
-  color:var(--a3);
-  text-transform:uppercase;
-  margin-bottom:10px;
+section {
+  padding: 100px 0;
+  position: relative;
+  z-index: 2;
 }
-.sec-title{
-  font-family:'Syne',sans-serif;
-  font-weight:800;
-  font-size:clamp(1.8rem,3.5vw,2.8rem);
-  color:var(--white);
-  letter-spacing:-.02em;
-  line-height:1.1;
+.section-header {
+  margin-bottom: 54px;
 }
-.sec-line{
-  width:56px;height:3px;
-  background:linear-gradient(90deg,var(--a1),transparent);
-  margin-top:14px;
-  border-radius:2px;
+.section-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  color: var(--crimson);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
-.sec-header{margin-bottom:60px}
-
-/* reveal */
-.reveal{opacity:0;transform:translateY(36px);transition:opacity .7s,transform .7s}
-.reveal.on{opacity:1;transform:none}
-
-/* === SKILLS === */
-#skills{background:var(--bg2)}
-.skill-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:22px}
-.skill-card{
-  background:var(--bg);
-  border:1px solid var(--border);
-  border-radius:8px;
-  padding:30px 28px;
-  position:relative;
-  overflow:hidden;
-  transition:transform .3s,border-color .3s,box-shadow .3s;
+.section-eyebrow::before {
+  content: '//';
+  color: var(--cyan);
 }
-.skill-card::before{
-  content:'';
-  position:absolute;top:0;left:0;
-  width:3px;height:0;
-  background:linear-gradient(180deg,var(--a1),var(--a2));
-  transition:height .4s;
-  border-radius:0 0 2px 0;
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.8vw, 2.8rem);
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.02em;
 }
-.skill-card:hover::before{height:100%}
-.skill-card:hover{transform:translateY(-6px);border-color:var(--border2);box-shadow:0 20px 60px rgba(0,255,224,.06)}
-.sk-icon{font-size:2rem;margin-bottom:14px;display:block}
-.sk-cat{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.7rem;
-  letter-spacing:.2em;
-  color:var(--a1);
-  margin-bottom:18px;
-  font-weight:700;
-}
-.sk-tags{display:flex;flex-wrap:wrap;gap:8px}
-.tag{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.72rem;
-  padding:5px 12px;
-  border:1px solid var(--border);
-  border-radius:3px;
-  color:var(--text);
-  background:var(--bg2);
-  transition:all .2s;
-  letter-spacing:.03em;
-}
-.tag:hover{border-color:var(--a1);color:var(--a1);background:rgba(0,255,224,.04)}
-
-/* === PROJECTS === */
-#projects{background:var(--bg)}
-.proj-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:28px}
-.proj-card{
-  background:var(--bg2);
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:32px;
-  position:relative;
-  overflow:hidden;
-  transition:all .3s;
-  display:flex;flex-direction:column;gap:14px;
-}
-.proj-card::after{
-  content:'';
-  position:absolute;bottom:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--a1),var(--a2));
-  transform:scaleX(0);
-  transition:transform .4s;
-  transform-origin:left;
-}
-.proj-card:hover::after{transform:scaleX(1)}
-.proj-card:hover{border-color:var(--border2);box-shadow:0 24px 80px rgba(0,128,255,.08);transform:translateY(-4px)}
-.proj-num{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.72rem;
-  color:var(--a3);
-  letter-spacing:.15em;
-}
-.proj-title{
-  font-family:'Syne',sans-serif;
-  font-weight:700;
-  font-size:1.15rem;
-  color:var(--white);
-  line-height:1.2;
-}
-.proj-desc{font-size:.92rem;color:var(--muted);line-height:1.65;flex:1}
-.proj-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
-.proj-tag{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.68rem;
-  padding:3px 10px;
-  border-radius:2px;
-  background:rgba(0,128,255,.1);
-  border:1px solid rgba(0,128,255,.3);
-  color:var(--a2);
-  letter-spacing:.05em;
-}
-.proj-date{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.7rem;
-  color:var(--muted);
-  letter-spacing:.08em;
-  margin-top:auto;
+.section-line {
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--cyan), var(--blue));
+  margin-top: 14px;
+  border-radius: 2px;
 }
 
-/* === EDUCATION === */
-#education{background:var(--bg2)}
-.edu-list{display:flex;flex-direction:column;gap:28px;max-width:740px}
-.edu-card{
-  background:var(--bg);
-  border:1px solid var(--border);
-  border-radius:8px;
-  padding:30px 32px;
-  display:flex;gap:28px;align-items:flex-start;
-  position:relative;overflow:hidden;
-  transition:border-color .3s,box-shadow .3s;
+/* === STATS / NETWORK TELEMETRY ROW === */
+.stats-banner {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  margin-top: -30px;
+  margin-bottom: 60px;
+  overflow: hidden;
 }
-.edu-card:hover{border-color:var(--border2);box-shadow:0 12px 40px rgba(0,255,224,.05)}
-.edu-icon{
-  width:52px;height:52px;
-  background:rgba(0,255,224,.06);
-  border:1px solid var(--border2);
-  border-radius:8px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.5rem;
-  flex-shrink:0;
+.stat-box {
+  padding: 28px 24px;
+  text-align: center;
+  border-right: 1px solid var(--border-subtle);
+  position: relative;
+  transition: all 0.3s;
 }
-.edu-body{}
-.edu-degree{
-  font-family:'Syne',sans-serif;
-  font-weight:700;
-  font-size:1.05rem;
-  color:var(--white);
-  margin-bottom:4px;
+.stat-box:last-child {
+  border-right: none;
 }
-.edu-school{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.82rem;
-  color:var(--a1);
-  margin-bottom:6px;
+.stat-box:hover {
+  background: rgba(0, 255, 224, 0.03);
 }
-.edu-meta{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.75rem;
-  color:var(--muted);
-  display:flex;gap:16px;flex-wrap:wrap;
+.stat-val {
+  font-family: var(--font-display);
+  font-size: 2.3rem;
+  font-weight: 800;
+  color: var(--cyan);
+  line-height: 1;
+  margin-bottom: 6px;
+  text-shadow: 0 0 20px rgba(0, 255, 224, 0.3);
 }
-.edu-meta span{display:flex;align-items:center;gap:5px}
-
-/* === EXPERIENCE === */
-#experience{background:var(--bg)}
-.exp-timeline{position:relative;padding-left:32px;max-width:780px}
-.exp-timeline::before{
-  content:'';
-  position:absolute;left:0;top:8px;bottom:8px;
-  width:1px;
-  background:linear-gradient(180deg,var(--a1),var(--a2),transparent);
-}
-.exp-item{
-  position:relative;
-  padding:30px 0 30px 40px;
-}
-.exp-item::before{
-  content:'';
-  position:absolute;left:-6px;top:36px;
-  width:12px;height:12px;
-  background:var(--bg2);
-  border:2px solid var(--a1);
-  border-radius:50%;
-  box-shadow:var(--glow1);
-}
-.exp-date{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.72rem;
-  color:var(--a3);
-  letter-spacing:.12em;
-  margin-bottom:8px;
-}
-.exp-title{
-  font-family:'Syne',sans-serif;
-  font-weight:700;
-  font-size:1.15rem;
-  color:var(--white);
-  margin-bottom:4px;
-}
-.exp-org{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.82rem;
-  color:var(--a2);
-  margin-bottom:16px;
-}
-.exp-ul{list-style:none;display:flex;flex-direction:column;gap:8px}
-.exp-ul li{
-  font-size:.92rem;
-  color:var(--muted);
-  padding-left:16px;
-  position:relative;
-  line-height:1.6;
-}
-.exp-ul li::before{content:'→';position:absolute;left:0;color:var(--a1);font-size:.8rem}
-
-/* === ACHIEVEMENTS === */
-#achievements{background:var(--bg2)}
-.ach-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px}
-.ach-card{
-  background:var(--bg);
-  border:1px solid var(--border);
-  border-radius:8px;
-  padding:28px;
-  display:flex;gap:18px;align-items:flex-start;
-  transition:all .3s;
-}
-.ach-card:hover{border-color:var(--a4);box-shadow:0 0 30px rgba(255,215,0,.06);transform:translateY(-3px)}
-.ach-icon{
-  width:44px;height:44px;
-  background:rgba(255,215,0,.07);
-  border:1px solid rgba(255,215,0,.25);
-  border-radius:6px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.3rem;
-  flex-shrink:0;
-}
-.ach-title{
-  font-family:'Syne',sans-serif;
-  font-weight:700;
-  font-size:1rem;
-  color:var(--white);
-  margin-bottom:6px;
-}
-.ach-desc{font-size:.88rem;color:var(--muted);line-height:1.6}
-.ach-year{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.7rem;
-  color:var(--a4);
-  margin-top:8px;
-  letter-spacing:.1em;
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
-/* === STATS === */
-.stats-row{
-  display:flex;gap:0;
-  border:1px solid var(--border);
-  border-radius:10px;
-  overflow:hidden;
-  margin-bottom:60px;
+/* === INTERACTIVE TOPOLOGY & PACKET SIMULATOR === */
+#topology-section {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
 }
-.stat{
-  flex:1;
-  padding:32px 24px;
-  text-align:center;
-  border-right:1px solid var(--border);
-  transition:background .3s;
+.topology-container {
+  background: rgba(3, 9, 16, 0.85);
+  border: 1px solid var(--border-glow);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  position: relative;
 }
-.stat:last-child{border-right:none}
-.stat:hover{background:rgba(0,255,224,.03)}
-.stat-num{
-  font-family:'Syne',sans-serif;
-  font-weight:800;
-  font-size:2.2rem;
-  color:var(--a1);
-  text-shadow:var(--glow1);
-  line-height:1;
-  margin-bottom:6px;
+.topo-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border-subtle);
 }
-.stat-lbl{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.68rem;
-  color:var(--muted);
-  letter-spacing:.12em;
-  text-transform:uppercase;
+.topo-title {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.packet-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.pkt-btn {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  background: rgba(13, 40, 64, 0.7);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-main);
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.pkt-btn:hover, .pkt-btn.active {
+  background: rgba(0, 255, 224, 0.12);
+  border-color: var(--cyan);
+  color: var(--cyan);
+  box-shadow: 0 0 12px rgba(0, 255, 224, 0.2);
+}
+.pkt-btn.danger:hover, .pkt-btn.danger.active {
+  background: rgba(255, 51, 102, 0.12);
+  border-color: var(--crimson);
+  color: var(--crimson);
+  box-shadow: 0 0 12px rgba(255, 51, 102, 0.2);
 }
 
-/* === CONTACT === */
-#contact{background:var(--bg);text-align:center}
-.contact-glow{
-  position:absolute;
-  width:400px;height:400px;
-  background:radial-gradient(circle,rgba(0,255,224,.04) 0%,transparent 70%);
-  left:50%;top:50%;transform:translate(-50%,-50%);
-  pointer-events:none;
+/* Topology Canvas Stage */
+.topo-stage {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  position: relative;
+  padding: 36px 12px 60px;
 }
-.contact-tagline{
-  font-size:1.05rem;
-  color:var(--muted);
-  max-width:480px;
-  margin:0 auto 40px;
-  line-height:1.7;
+.topo-node {
+  background: rgba(7, 20, 34, 0.9);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 20px 14px;
+  text-align: center;
+  position: relative;
+  z-index: 5;
+  transition: all 0.3s;
 }
-.contact-links{
-  display:flex;gap:14px;flex-wrap:wrap;justify-content:center;
-  margin-bottom:28px;
+.topo-node.active-node {
+  border-color: var(--cyan);
+  box-shadow: 0 0 25px rgba(0, 255, 224, 0.3);
+  transform: scale(1.04);
 }
-.c-link{
-  font-family:'JetBrains Mono',monospace;
-  font-size:.8rem;
-  letter-spacing:.05em;
-  padding:13px 22px;
-  border-radius:4px;
-  text-decoration:none;
-  border:1px solid var(--border2);
-  color:var(--text);
-  display:flex;align-items:center;gap:9px;
-  transition:all .25s;
+.topo-node.drop-node {
+  border-color: var(--crimson);
+  box-shadow: 0 0 25px rgba(255, 51, 102, 0.4);
+  transform: scale(1.04);
 }
-.c-link:hover{transform:translateY(-3px)}
-.c-link.email:hover{border-color:var(--a1);color:var(--a1);box-shadow:var(--glow1)}
-.c-link.github:hover{border-color:#fff;color:#fff;box-shadow:0 0 24px rgba(255,255,255,.12)}
-.c-link.linkedin:hover{border-color:#0a66c2;color:#0a66c2;box-shadow:0 0 24px rgba(10,102,194,.3)}
-.c-link.twitter:hover{border-color:var(--text);color:var(--white)}
-.c-link.phone:hover{border-color:var(--a3);color:var(--a3);box-shadow:var(--glow3)}
-.c-link svg{width:16px;height:16px;fill:currentColor;flex-shrink:0}
+.node-icon {
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+  display: inline-block;
+}
+.node-name {
+  font-family: var(--font-space);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.node-ip {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--cyan);
+}
+.node-role {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  margin-top: 6px;
+}
+
+/* Packet Animation Path */
+.packet-track {
+  position: absolute;
+  top: 75px;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(0,255,224,0.1), rgba(0,136,255,0.3), rgba(0,255,224,0.1));
+  z-index: 2;
+}
+.animated-packet {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: var(--cyan);
+  border-radius: 50%;
+  top: -6px;
+  left: 0%;
+  box-shadow: 0 0 16px var(--cyan), 0 0 30px var(--cyan);
+  opacity: 0;
+  z-index: 10;
+  pointer-events: none;
+  transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s, background 0.2s;
+}
+
+/* Inspector & Live Log Bottom Panel */
+.topo-info-panel {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 16px;
+  margin-top: 14px;
+}
+.packet-inspector {
+  background: #040c17;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+.pi-header {
+  color: var(--cyan);
+  font-weight: 700;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 6px;
+}
+.pi-layer {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+  padding: 4px 8px;
+  border-radius: 3px;
+  background: rgba(13, 40, 64, 0.4);
+}
+.pi-layer-tag {
+  color: var(--amber);
+  font-weight: 700;
+  min-width: 65px;
+}
+.pi-layer-val {
+  color: var(--text-main);
+}
+.topo-log {
+  background: #02060c;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  max-height: 160px;
+  overflow-y: auto;
+  color: var(--text-muted);
+}
+.topo-log-line {
+  margin-bottom: 4px;
+}
+.topo-log-time {
+  color: var(--text-dim);
+}
+
+/* === SKILLS / OSI & NETWORKING ARSENAL === */
+#arsenal {
+  background: var(--bg-primary);
+}
+.arsenal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 22px;
+}
+.arsenal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 26px 22px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+  backdrop-filter: blur(8px);
+}
+.arsenal-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 0;
+  background: linear-gradient(180deg, var(--cyan), var(--blue));
+  transition: height 0.4s ease;
+}
+.arsenal-card:hover::before {
+  height: 100%;
+}
+.arsenal-card:hover {
+  border-color: var(--border-glow);
+  transform: translateY(-5px);
+  box-shadow: 0 16px 40px rgba(0, 136, 255, 0.12);
+}
+.ar-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.ar-icon {
+  width: 42px;
+  height: 42px;
+  background: rgba(0, 255, 224, 0.08);
+  border: 1px solid rgba(0, 255, 224, 0.25);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+}
+.ar-cat {
+  font-family: var(--font-space);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+}
+.ar-layer {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--cyan);
+  letter-spacing: 0.1em;
+}
+.ar-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.ar-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 4px 10px;
+  border-radius: 3px;
+  background: rgba(6, 18, 30, 0.8);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-main);
+  transition: all 0.2s;
+}
+.ar-tag:hover {
+  border-color: var(--cyan);
+  color: var(--cyan);
+  background: rgba(0, 255, 224, 0.05);
+}
+
+/* === FEATURED PROJECTS === */
+#projects {
+  background: var(--bg-secondary);
+}
+.proj-filter {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 34px;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  background: rgba(13, 40, 64, 0.5);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
+  padding: 7px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-btn:hover, .filter-btn.active {
+  background: rgba(0, 255, 224, 0.1);
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+.proj-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 26px;
+}
+.proj-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.35s ease;
+  backdrop-filter: blur(10px);
+}
+.proj-card:hover {
+  border-color: var(--border-glow);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 136, 255, 0.1);
+}
+.proj-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+.proj-id {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--crimson);
+  letter-spacing: 0.15em;
+  font-weight: 700;
+}
+.proj-status-badge {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  background: rgba(16, 244, 156, 0.1);
+  border: 1px solid rgba(16, 244, 156, 0.3);
+  color: var(--green);
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+.proj-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+.proj-desc {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin-bottom: 20px;
+  flex: 1;
+}
+.proj-highlights {
+  list-style: none;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.proj-highlights li {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--text-dim);
+  padding-left: 14px;
+  position: relative;
+}
+.proj-highlights li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--cyan);
+}
+.proj-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.proj-tag {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  padding: 3px 9px;
+  border-radius: 3px;
+  background: rgba(0, 136, 255, 0.1);
+  border: 1px solid rgba(0, 136, 255, 0.25);
+  color: var(--blue);
+}
+.proj-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-subtle);
+}
+.proj-year {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
+/* === NETWORK UTILITIES / SUBNET CALCULATOR === */
+#tools-section {
+  background: var(--bg-primary);
+}
+.tool-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 32px;
+  align-items: flex-start;
+}
+.tool-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+.tool-header {
+  font-family: var(--font-space);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tool-sub {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+.calc-input-group {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.calc-input {
+  flex: 1;
+  background: #040c17;
+  border: 1px solid var(--border-glow);
+  border-radius: 4px;
+  padding: 10px 14px;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: #fff;
+  outline: none;
+}
+.calc-input:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 10px rgba(0, 255, 224, 0.2);
+}
+.calc-results {
+  background: #030a13;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 18px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.res-item {
+  display: flex;
+  flex-direction: column;
+}
+.res-lbl {
+  color: var(--text-dim);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+}
+.res-val {
+  color: var(--cyan);
+  font-weight: 600;
+}
+
+/* === EXPERIENCE & HACKATHONS === */
+#experience {
+  background: var(--bg-secondary);
+}
+.exp-timeline {
+  position: relative;
+  padding-left: 32px;
+  max-width: 820px;
+}
+.exp-timeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--cyan), var(--blue), transparent);
+}
+.exp-item {
+  position: relative;
+  padding-bottom: 40px;
+}
+.exp-item::before {
+  content: '';
+  position: absolute;
+  left: -37px;
+  top: 6px;
+  width: 12px;
+  height: 12px;
+  background: #02060d;
+  border: 2px solid var(--cyan);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--cyan);
+}
+.exp-date {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--crimson);
+  letter-spacing: 0.12em;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+.exp-role {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.exp-org {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--cyan);
+  margin-bottom: 14px;
+}
+.exp-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.exp-list li {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  padding-left: 18px;
+  position: relative;
+  line-height: 1.6;
+}
+.exp-list li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--cyan);
+}
+
+/* === EDUCATION & CERTIFICATIONS === */
+#education {
+  background: var(--bg-primary);
+}
+.edu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+.edu-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 26px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  transition: all 0.3s;
+}
+.edu-card:hover {
+  border-color: var(--border-glow);
+  box-shadow: 0 12px 30px rgba(0, 136, 255, 0.1);
+  transform: translateY(-3px);
+}
+.edu-icon-wrap {
+  width: 50px;
+  height: 50px;
+  background: rgba(0, 255, 224, 0.08);
+  border: 1px solid rgba(0, 255, 224, 0.2);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+.edu-degree {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.edu-school {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--cyan);
+  margin-bottom: 8px;
+}
+.edu-meta {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+/* === CONTACT / NETWORK PEERING === */
+#contact {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-subtle);
+  text-align: center;
+  position: relative;
+}
+.contact-wrap {
+  max-width: 680px;
+  margin: 0 auto;
+}
+.contact-tagline {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-bottom: 36px;
+}
+.contact-links {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 36px;
+}
+.c-btn {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  padding: 12px 20px;
+  border-radius: 6px;
+  text-decoration: none;
+  border: 1px solid var(--border-subtle);
+  background: rgba(7, 20, 34, 0.8);
+  color: var(--text-main);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.25s;
+  cursor: pointer;
+}
+.c-btn:hover {
+  transform: translateY(-3px);
+  border-color: var(--cyan);
+  color: var(--cyan);
+  box-shadow: var(--glow-cyan);
+}
+.c-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+.copied-toast {
+  display: none;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--green);
+  margin-top: 10px;
+}
 
 /* === FOOTER === */
-footer{
-  border-top:1px solid var(--border);
-  padding:28px 48px;
-  display:flex;align-items:center;justify-content:space-between;
-  position:relative;z-index:2;
-  font-family:'JetBrains Mono',monospace;
-  font-size:.72rem;
-  color:var(--muted);
+footer {
+  border-top: 1px solid var(--border-subtle);
+  padding: 24px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  background: #02060c;
+  position: relative;
+  z-index: 2;
 }
-footer span{color:var(--a1)}
-footer .fr{text-align:right}
-
-/* === PROGRESS BARS === */
-.prog-list{display:flex;flex-direction:column;gap:24px;max-width:680px}
-.prog-item{}
-.prog-header{display:flex;justify-content:space-between;margin-bottom:8px}
-.prog-label{font-weight:600;font-size:.95rem;color:var(--white)}
-.prog-pct{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--a1)}
-.prog-track{
-  height:5px;
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:3px;
-  overflow:hidden;
-}
-.prog-fill{
-  height:100%;
-  background:linear-gradient(90deg,var(--a2),var(--a1));
-  width:0;
-  border-radius:3px;
-  box-shadow:0 0 12px var(--a1);
-  transition:width 1.4s cubic-bezier(.25,.8,.25,1);
+footer span.hi {
+  color: var(--cyan);
 }
 
-/* === ABOUT === */
-#about{background:var(--bg2)}
-.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
-.about-text{font-size:1rem;color:var(--muted);line-height:1.8}
-.about-text p+p{margin-top:16px}
-.about-text strong{color:var(--a1)}
+/* Scroll reveal animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.on {
+  opacity: 1;
+  transform: none;
+}
 
-/* === SCROLLBAR === */
-::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--a1);border-radius:4px}
-
-@media(max-width:900px){
-  nav{padding:14px 24px}
-  nav ul{gap:18px}
-  .hero-wrap,.about-grid{grid-template-columns:1fr;gap:48px}
-  .stats-row{flex-wrap:wrap}
-  .stat{flex:1 1 40%;border-bottom:1px solid var(--border)}
-  footer{flex-direction:column;gap:10px;text-align:center}
-  .container{padding:0 24px}
+/* === RESPONSIVE STYLES === */
+@media (max-width: 960px) {
+  nav { padding: 12px 20px; }
+  nav ul { display: none; } /* Mobile simplified */
+  .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  .stats-banner { grid-template-columns: 1fr 1fr; }
+  .stat-box { border-bottom: 1px solid var(--border-subtle); }
+  .topo-stage { grid-template-columns: 1fr; gap: 14px; padding: 20px 0; }
+  .packet-track { display: none; }
+  .topo-info-panel, .tool-grid { grid-template-columns: 1fr; }
+  footer { flex-direction: column; gap: 8px; text-align: center; }
+  .container { padding: 0 20px; }
 }
 </style>
 </head>
@@ -622,484 +1360,1191 @@ footer .fr{text-align:right}
 <div id="grid-bg"></div>
 <canvas id="cvs"></canvas>
 
+<!-- TOP NOC STATUS TICKER -->
+<div class="noc-ticker">
+  <div class="ticker-left">
+    <div class="ticker-badge"><span class="pulse-led"></span>NOC STATUS: ONLINE</div>
+    <div class="ticker-stream">
+      <div class="ticker-item">HOST: <span>adityanegi-hu.me</span></div>
+      <div class="ticker-item">BGP-AS: <span>AS64512</span> (ESTABLISHED)</div>
+      <div class="ticker-item">DPI FIREWALL: <span>ACTIVE [0-DROP]</span></div>
+      <div class="ticker-item">LATENCY: <span id="live-ping">12ms</span></div>
+      <div class="ticker-item">TLS: <span>1.3 / AES-256-GCM</span></div>
+    </div>
+  </div>
+  <div class="ticker-right">
+    <span>SEC_OP_READY ✓</span>
+  </div>
+</div>
 
-<!-- NAV -->
+<!-- NAVIGATION -->
 <nav>
-  <div class="logo">AN<em>_</em>portfolio</div>
+  <a href="#hero" class="brand">
+    <div class="brand-icon">AN</div>
+    <div>
+      <div class="brand-text">ADITYA<span>_</span>NEGI</div>
+      <span class="brand-sub">// NET_SYS &amp; SEC</span>
+    </div>
+  </a>
   <ul>
-    <li><a href="#hero">Home</a></li>
-    <li><a href="#skills">Skills</a></li>
+    <li><a href="#hero" class="active">Home</a></li>
+    <li><a href="#topology-section">Topology Simulator</a></li>
+    <li><a href="#arsenal">Arsenal</a></li>
     <li><a href="#projects">Projects</a></li>
+    <li><a href="#tools-section">Net Tools</a></li>
+    <li><a href="#experience">Experience</a></li>
     <li><a href="#education">Education</a></li>
-    <li><a href="#about">About</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
-  <div class="nav-status"><span class="status-dot"></span>Available to Collaborate</div>
+  <a href="#contact" class="nav-cta"><span>⚡</span> Connect</a>
 </nav>
 
 <!-- HERO -->
 <section id="hero">
   <div class="container">
-    <div class="hero-wrap">
+    <div class="hero-grid">
+      
+      <!-- Left Column -->
       <div>
-        <div class="hero-badge">Developer · Cybersecurity Enthusiast · Student</div>
-        <h1 class="hero-name">
-          ADITYA
-          <span class="accent" data-text="NEGI">NEGI</span>
+        <div class="hero-tag">NETWORK SYSTEMS · PACKET SECURITY · AUTOMATION</div>
+        <h1 class="hero-title">
+          <span class="glow-name">ADITYA NEGI</span>
+          <span class="sub-accent">Network &amp; Security Engineer</span>
         </h1>
-        <p class="hero-role">// BCA Student @ Graphic Era Hill University &nbsp;<span>·</span>&nbsp; Haldwani, India 🇮🇳</p>
+        <div class="hero-role">
+          <span>// BCA Student @ Graphic Era Hill Univ</span>
+          <span class="div">·</span>
+          <span class="highlight">TCP/IP &amp; Routing Specialist</span>
+          <span class="div">·</span>
+          <span>Haldwani, India 🇮🇳</span>
+        </div>
         <p class="hero-desc">
-          I build <strong>real-world projects</strong> at the intersection of <strong>web development</strong>, <strong>network security</strong>, and <strong>cybersecurity</strong>. My recent work spans full-stack apps, intrusion detection systems, and practical security tooling.
+          Engineering resilient <strong>network infrastructure</strong>, <strong>deep packet inspection firewalls</strong>, and <strong>intrusion detection pipelines</strong>. Specializing in low-level packet analysis, Python/Scapy automation, and secure full-stack architectures.
         </p>
-        <div class="cta-group">
-          <a href="#contact" class="btn btn-fill">Get In Touch</a>
-          <a href="https://github.com/adityanegi-hu" target="_blank" class="btn btn-outline">GitHub</a>
-          <a href="#projects" class="btn btn-ghost">View Projects</a>
+        <div class="hero-cta">
+          <a href="#topology-section" class="btn btn-primary">
+            <span>▶</span> Run Packet Simulator
+          </a>
+          <a href="#projects" class="btn btn-secondary">
+            <span>⚡</span> Explore Projects
+          </a>
+          <a href="#contact" class="btn btn-ghost">
+            <span>✉</span> Link Up
+          </a>
         </div>
       </div>
-      <div class="terminal">
-        <div class="t-bar">
-          <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
-          <span class="t-title">aditya@kali ~ terminal</span>
-        </div>
-        <div class="t-body">
-          <div class="t-line"><span class="t-prompt">❯</span><span class="t-cmd">cat profile.yaml</span></div>
-          <div class="t-out"><span class="t-k">name:</span> <span class="t-v">Aditya Negi</span></div>
-          <div class="t-out"><span class="t-k">role:</span> <span class="t-v">Developer · Security Enthusiast</span></div>
-          <div class="t-out"><span class="t-k">university:</span> <span class="t-v">GEHU Haldwani</span></div>
-          <div class="t-out"><span class="t-k">degree:</span> <span class="t-v">BCA (2025–2027)</span></div>
-          <div class="t-out"><span class="t-k">focus:</span> <span class="t-v">MERN · Python · Network Security</span></div>
-          <div class="t-out"><span class="t-k">email:</span> <span class="t-v">anegi0956@gmail.com</span></div>
-          <div class="t-out"><span class="t-k">phone:</span> <span class="t-v2">+91-7037772016</span></div>
-          <div class="t-out"><span class="t-k">status:</span> <span class="t-v">open_to_collaborate ✓</span></div>
-          <br>
-          <div class="t-line"><span class="t-prompt">❯</span><span class="blink"></span></div>
+
+      <!-- Right Column: Interactive CLI Terminal -->
+      <div>
+        <div class="terminal-card">
+          <div class="t-header">
+            <div class="t-dots">
+              <span class="t-dot red"></span>
+              <span class="t-dot yellow"></span>
+              <span class="t-dot green"></span>
+            </div>
+            <span>aditya@core-gateway ~ bash (v5.2)</span>
+          </div>
+          <div class="t-body" id="term-output">
+            <div class="t-line"><span class="t-prompt">guest@core-gateway:~$ </span><span class="t-cmd">whoami</span></div>
+            <div class="t-line t-out"><span class="t-accent">Aditya Negi</span> — Network Systems &amp; Cybersecurity Engineer</div>
+            <div class="t-line t-out">Core Focus: <span class="t-green">TCP/IP, DPI Firewalls, BGP/OSPF Routing, Scapy IDS, MERN</span></div>
+            <div class="t-line"><span class="t-prompt">guest@core-gateway:~$ </span><span class="t-cmd">show ip route</span></div>
+            <div class="t-line t-out"><span class="t-warn">S* 0.0.0.0/0</span> [1/0] via 192.168.1.1, eth0 (Default Gateway)</div>
+            <div class="t-line t-out"><span class="t-accent">O  10.0.0.0/16</span> [110/20] via 10.0.1.254, eth1 (OSPF Core Mesh)</div>
+            <div class="t-line t-out"><span class="t-blue">B  172.16.0.0/12</span> [20/0] via AS64512 (BGP Border Gateway)</div>
+            <div class="t-line t-out"><span class="t-green">C  192.168.1.0/24</span> is directly connected, eth0</div>
+            <div class="t-line" style="margin-top:8px"><span class="t-prompt">guest@core-gateway:~$ </span><span class="t-cmd" id="typed-cmd"></span></div>
+          </div>
+          <div class="t-quick-cmds">
+            <span style="color:var(--text-dim)">Try:</span>
+            <button class="quick-cmd-btn" onclick="runCliCmd('ping adityanegi-hu.me')">ping</button>
+            <button class="quick-cmd-btn" onclick="runCliCmd('traceroute adityanegi-hu.me')">traceroute</button>
+            <button class="quick-cmd-btn" onclick="runCliCmd('show interfaces')">ifconfig</button>
+            <button class="quick-cmd-btn" onclick="runCliCmd('tcpdump -c 2')">tcpdump</button>
+            <button class="quick-cmd-btn" onclick="runCliCmd('cat skills')">skills</button>
+            <button class="quick-cmd-btn" onclick="runCliCmd('help')">help</button>
+            <button class="quick-cmd-btn" onclick="runCliCmd('clear')">clear</button>
+          </div>
         </div>
       </div>
+
     </div>
   </div>
 </section>
 
-<!-- STATS -->
-<section style="padding:0;position:relative;z-index:2">
+<!-- NOC METRICS / TELEMETRY BANNER -->
+<section style="padding:0;">
   <div class="container">
-    <div class="stats-row reveal">
-      <div class="stat">
-        <div class="stat-num">2+</div>
-        <div class="stat-lbl">Years Coding</div>
+    <div class="stats-banner reveal">
+      <div class="stat-box">
+        <div class="stat-val">500K+</div>
+        <div class="stat-label">Packets Sniffed &amp; Inspected</div>
       </div>
-      <div class="stat">
-        <div class="stat-num">4+</div>
-        <div class="stat-lbl">Projects Built</div>
+      <div class="stat-box">
+        <div class="stat-val">&lt; 1ms</div>
+        <div class="stat-label">DPI Engine Inspection Time</div>
       </div>
-      <div class="stat">
-        <div class="stat-num">10+</div>
-        <div class="stat-lbl">Technologies</div>
+      <div class="stat-box">
+        <div class="stat-val">100%</div>
+        <div class="stat-label">ARP Poisoning &amp; Port Scan Detect</div>
       </div>
-      <div class="stat">
-        <div class="stat-num">CTF</div>
-        <div class="stat-lbl">Challenges Solved</div>
+      <div class="stat-box">
+        <div class="stat-val">99.9%</div>
+        <div class="stat-label">Simulated Network Uptime</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- SKILLS -->
-<section id="skills">
+<!-- INTERACTIVE NETWORK TOPOLOGY & PACKET SIMULATOR -->
+<section id="topology-section">
   <div class="container">
-    <div class="sec-header reveal">
-      <p class="sec-eyebrow">// 02. Arsenal</p>
-      <h2 class="sec-title">Tech Stack</h2>
-      <div class="sec-line"></div>
+    <div class="section-header reveal">
+      <p class="section-eyebrow">Interactive Network Simulation Lab</p>
+      <h2 class="section-title">Network Topology &amp; Packet Inspector</h2>
+      <div class="section-line"></div>
     </div>
-    <div class="skill-grid">
-      <div class="skill-card reveal">
-        <span class="sk-icon">💻</span>
-        <div class="sk-cat">Programming Languages</div>
-        <div class="sk-tags">
-          <span class="tag">Python</span>
-          <span class="tag">C++</span>
-          <span class="tag">C</span>
-          <span class="tag">Bash</span>
-          <span class="tag">SQL</span>
+
+    <div class="topology-container reveal">
+      <div class="topo-controls">
+        <div class="topo-title">
+          <span>⚡ Select Packet Transmission:</span>
+        </div>
+        <div class="packet-buttons">
+          <button class="pkt-btn active" onclick="simulatePacket('http')">
+            <span>🌐</span> HTTP GET (Port 80/443)
+          </button>
+          <button class="pkt-btn" onclick="simulatePacket('syn_scan')">
+            <span>🔍</span> TCP SYN Scan (Port 22/80)
+          </button>
+          <button class="pkt-btn danger" onclick="simulatePacket('malicious_dpi')">
+            <span>☣️</span> SQLi Payload (DPI Drop)
+          </button>
+          <button class="pkt-btn" onclick="simulatePacket('icmp_ping')">
+            <span>📡</span> ICMP Echo (Ping)
+          </button>
         </div>
       </div>
-      <div class="skill-card reveal">
-        <span class="sk-icon">🌐</span>
-        <div class="sk-cat">Web Technologies</div>
-        <div class="sk-tags">
-          <span class="tag">HTML5</span>
-          <span class="tag">CSS3</span>
-          <span class="tag">PHP</span>
-          <span class="tag">JavaScript</span>
-          <span class="tag">React.js</span>
-          <span class="tag">Node.js</span>
+
+      <!-- Visual Node Topology Stage -->
+      <div class="topo-stage">
+        <div class="packet-track">
+          <div class="animated-packet" id="anim-pkt"></div>
+        </div>
+
+        <!-- Node 1 -->
+        <div class="topo-node" id="node-0">
+          <span class="node-icon">💻</span>
+          <div class="node-name">Client Host</div>
+          <div class="node-ip">192.168.1.50</div>
+          <div class="node-role">Source Node</div>
+        </div>
+
+        <!-- Node 2 -->
+        <div class="topo-node" id="node-1">
+          <span class="node-icon">🔀</span>
+          <div class="node-name">Edge Gateway</div>
+          <div class="node-ip">192.168.1.1 / AS64512</div>
+          <div class="node-role">BGP / OSPF Router</div>
+        </div>
+
+        <!-- Node 3 -->
+        <div class="topo-node" id="node-2">
+          <span class="node-icon">🛡️</span>
+          <div class="node-name">DPI Firewall</div>
+          <div class="node-ip">10.0.1.1</div>
+          <div class="node-role">Layer-7 Rule Filter</div>
+        </div>
+
+        <!-- Node 4 -->
+        <div class="topo-node" id="node-3">
+          <span class="node-icon">🚨</span>
+          <div class="node-name">NIDS Sniffer</div>
+          <div class="node-ip">10.0.1.254 (Scapy)</div>
+          <div class="node-role">Anomaly &amp; Scan Detector</div>
+        </div>
+
+        <!-- Node 5 -->
+        <div class="topo-node" id="node-4">
+          <span class="node-icon">🗄️</span>
+          <div class="node-name">App Cluster</div>
+          <div class="node-ip">10.0.10.80:443</div>
+          <div class="node-role">Target Web Server</div>
         </div>
       </div>
-      <div class="skill-card reveal">
-        <span class="sk-icon">🧰</span>
-        <div class="sk-cat">Tools &amp; Technologies</div>
-        <div class="sk-tags">
-          <span class="tag">MySQL</span>
-          <span class="tag">Burp Suite</span>
-          <span class="tag">Git</span>
-          <span class="tag">Wireshark</span>
-          <span class="tag">Scapy</span>
+
+      <!-- Inspector Panel -->
+      <div class="topo-info-panel">
+        <div class="packet-inspector">
+          <div class="pi-header">
+            <span>PACKET HEADER DECODER</span>
+            <span id="pkt-status-tag" style="color:var(--green)">STATUS: READY</span>
+          </div>
+          <div class="pi-layer">
+            <span class="pi-layer-tag">L2 DataLink:</span>
+            <span class="pi-layer-val" id="pi-l2">Ethernet II | Src: 00:1A:2B:3C:4D:5E ➔ Dst: 00:14:22:01:23:45</span>
+          </div>
+          <div class="pi-layer">
+            <span class="pi-layer-tag">L3 Network:</span>
+            <span class="pi-layer-val" id="pi-l3">IPv4 | Src: 192.168.1.50 ➔ Dst: 10.0.10.80 | TTL: 64 | Proto: TCP (6)</span>
+          </div>
+          <div class="pi-layer">
+            <span class="pi-layer-tag">L4 Transport:</span>
+            <span class="pi-layer-val" id="pi-l4">TCP | SrcPort: 54321 ➔ DstPort: 443 | Flags: [ACK, PSH] | Seq: 101</span>
+          </div>
+          <div class="pi-layer">
+            <span class="pi-layer-tag">L7 Payload:</span>
+            <span class="pi-layer-val" id="pi-l7">GET /api/v1/network/telemetry HTTP/1.1 (Payload Verified Clean)</span>
+          </div>
         </div>
-      </div>
-      <div class="skill-card reveal">
-        <span class="sk-icon">🐧</span>
-        <div class="sk-cat">Operating Systems</div>
-        <div class="sk-tags">
-          <span class="tag">Linux</span>
-          <span class="tag">Kali Linux</span>
-          <span class="tag">Parrot OS</span>
-          <span class="tag">Windows</span>
-        </div>
-      </div>
-      <div class="skill-card reveal">
-        <span class="sk-icon">🔐</span>
-        <div class="sk-cat">Cybersecurity</div>
-        <div class="sk-tags">
-          <span class="tag">Network Security</span>
-          <span class="tag">Pen Testing</span>
-          <span class="tag">CTF Challenges</span>
-          <span class="tag">Packet Analysis</span>
-          <span class="tag">Cryptography</span>
-        </div>
-      </div>
-      <div class="skill-card reveal">
-        <span class="sk-icon">⚡</span>
-        <div class="sk-cat">Core Domains</div>
-        <div class="sk-tags">
-          <span class="tag">Web Development</span>
-          <span class="tag">Info Security</span>
-          <span class="tag">Full-Stack (MERN)</span>
-          <span class="tag">REST APIs</span>
+
+        <!-- Live Node Console -->
+        <div class="topo-log" id="topo-live-log">
+          <div class="topo-log-line"><span class="topo-log-time">[09:00:00]</span> [INIT] Packet simulation engine initialized.</div>
+          <div class="topo-log-line"><span class="topo-log-time">[09:00:01]</span> [NOC] Ready for packet dispatch. Select an operation above.</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PROJECTS -->
+<!-- NETWORK ARSENAL & SKILLS (OSI PROTOCOL STACK) -->
+<section id="arsenal">
+  <div class="container">
+    <div class="section-header reveal">
+      <p class="section-eyebrow">Technical Stack &amp; Protocols</p>
+      <h2 class="section-title">Network &amp; Security Arsenal</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="arsenal-grid">
+      
+      <!-- Card 1: L2/L3 Routing & Switching -->
+      <div class="arsenal-card reveal">
+        <div class="ar-header">
+          <div class="ar-icon">🌐</div>
+          <div>
+            <div class="ar-cat">Routing &amp; Switching</div>
+            <div class="ar-layer">OSI LAYERS 2 &amp; 3</div>
+          </div>
+        </div>
+        <div class="ar-tags">
+          <span class="ar-tag">IPv4 / IPv6 Subnetting</span>
+          <span class="ar-tag">CIDR / VLSM</span>
+          <span class="ar-tag">OSPF (Area 0)</span>
+          <span class="ar-tag">BGP (eBGP/iBGP)</span>
+          <span class="ar-tag">VLANs &amp; 802.1Q Trunking</span>
+          <span class="ar-tag">Spanning Tree (STP/RSTP)</span>
+          <span class="ar-tag">ARP &amp; ICMP</span>
+          <span class="ar-tag">NAT / PAT</span>
+        </div>
+      </div>
+
+      <!-- Card 2: Network Security & Packet Analysis -->
+      <div class="arsenal-card reveal">
+        <div class="ar-header">
+          <div class="ar-icon">🛡️</div>
+          <div>
+            <div class="ar-cat">Network Security &amp; IDS</div>
+            <div class="ar-layer">FIREWALL &amp; TELEMETRY</div>
+          </div>
+        </div>
+        <div class="ar-tags">
+          <span class="ar-tag">Deep Packet Inspection (DPI)</span>
+          <span class="ar-tag">Wireshark Packet Analysis</span>
+          <span class="ar-tag">Scapy Packet Sniffing</span>
+          <span class="ar-tag">NIDS / NIPS Heuristics</span>
+          <span class="ar-tag">iptables / Netfilter</span>
+          <span class="ar-tag">Burp Suite</span>
+          <span class="ar-tag">Port Security &amp; ACLs</span>
+          <span class="ar-tag">TLS / SSL &amp; WireGuard VPN</span>
+        </div>
+      </div>
+
+      <!-- Card 3: Network Automation & Scripting -->
+      <div class="arsenal-card reveal">
+        <div class="ar-header">
+          <div class="ar-icon">🐍</div>
+          <div>
+            <div class="ar-cat">Network Automation</div>
+            <div class="ar-layer">PROGRAMMABILITY &amp; CLI</div>
+          </div>
+        </div>
+        <div class="ar-tags">
+          <span class="ar-tag">Python Socket Programming</span>
+          <span class="ar-tag">Scapy Custom Crafting</span>
+          <span class="ar-tag">Netmiko / Paramiko SSH</span>
+          <span class="ar-tag">Bash Scripting</span>
+          <span class="ar-tag">REST APIs &amp; JSON Parsing</span>
+          <span class="ar-tag">Linux Netstack Tuning</span>
+          <span class="ar-tag">Regex Packet Matching</span>
+          <span class="ar-tag">Automated Port Scanners</span>
+        </div>
+      </div>
+
+      <!-- Card 4: Full-Stack & Systems Infrastructure -->
+      <div class="arsenal-card reveal">
+        <div class="ar-header">
+          <div class="ar-icon">⚙️</div>
+          <div>
+            <div class="ar-cat">Full-Stack &amp; Systems</div>
+            <div class="ar-layer">APPLICATIONS &amp; OS</div>
+          </div>
+        </div>
+        <div class="ar-tags">
+          <span class="ar-tag">Kali Linux / Parrot OS</span>
+          <span class="ar-tag">C / C++ (Low-Level Net)</span>
+          <span class="ar-tag">React.js &amp; WebSockets</span>
+          <span class="ar-tag">Node.js &amp; Express</span>
+          <span class="ar-tag">MongoDB &amp; MySQL</span>
+          <span class="ar-tag">Git Version Control</span>
+          <span class="ar-tag">Docker Networking Basics</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED NETWORK PROJECTS -->
 <section id="projects">
   <div class="container">
-    <div class="sec-header reveal">
-      <p class="sec-eyebrow">// 03. Work</p>
-      <h2 class="sec-title">Projects</h2>
-      <div class="sec-line"></div>
+    <div class="section-header reveal">
+      <p class="section-eyebrow">Production &amp; Security Engineering</p>
+      <h2 class="section-title">Featured Network &amp; Security Projects</h2>
+      <div class="section-line"></div>
     </div>
+
+    <!-- Filter Buttons -->
+    <div class="proj-filter reveal">
+      <button class="filter-btn active" onclick="filterProjects('all')">All Work</button>
+      <button class="filter-btn" onclick="filterProjects('netsec')">Network Security &amp; IDS</button>
+      <button class="filter-btn" onclick="filterProjects('automation')">Packet Analysis &amp; C++</button>
+      <button class="filter-btn" onclick="filterProjects('fullstack')">Full-Stack &amp; Telemetry</button>
+    </div>
+
     <div class="proj-grid">
 
-      <div class="proj-card reveal">
-        <div class="proj-num">PROJECT_01</div>
-        <div class="proj-title">Tech Geeks Hackathon — MERN Stack Application </div>
-        <div class="proj-desc">Built a full-stack web application during a 24-hour hackathon at GEHU using the MERN stack, covering frontend, backend, and RESTful APIs from concept to deployment.</div>
+      <!-- Project 1: DPI Firewall -->
+      <div class="proj-card reveal" data-category="netsec automation">
+        <div class="proj-top">
+          <span class="proj-id">NET_PROJ // 01</span>
+          <span class="proj-status-badge">HIGH PERFORMANCE</span>
+        </div>
+        <h3 class="proj-title">Deep Packet Inspection (DPI) Firewall Engine</h3>
+        <p class="proj-desc">
+          Engineered a low-level C++ network security firewall capable of inspecting raw Layer-7 packet payloads in real-time, matching signature-based attack vectors, and enforcing rule-based traffic drops.
+        </p>
+        <ul class="proj-highlights">
+          <li>Extracts Ethernet, IPv4, TCP/UDP headers using custom binary decoders</li>
+          <li>Applies regex signature matching for SQL injection, XSS, and payload anomalies</li>
+          <li>Maintains connection state tables and packet drop telemetry metrics</li>
+        </ul>
+        <div class="proj-tags">
+          <span class="proj-tag">C++</span>
+          <span class="proj-tag">Linux Raw Sockets</span>
+          <span class="proj-tag">Packet Sniffing</span>
+          <span class="proj-tag">Layer 7 Inspection</span>
+          <span class="proj-tag">Network Security</span>
+        </div>
+        <div class="proj-actions">
+          <span class="proj-year">// 2024 · Systems Security</span>
+          <a href="#topology-section" class="btn btn-ghost btn-sm" onclick="simulatePacket('malicious_dpi')">Simulate Drop ↗</a>
+        </div>
+      </div>
+
+      <!-- Project 2: Network Intrusion Detection System -->
+      <div class="proj-card reveal" data-category="netsec automation">
+        <div class="proj-top">
+          <span class="proj-id">NET_PROJ // 02</span>
+          <span class="proj-status-badge">ACTIVE REAL-TIME</span>
+        </div>
+        <h3 class="proj-title">Distributed Network Intrusion Detection System (NIDS)</h3>
+        <p class="proj-desc">
+          Built a distributed intrusion detection pipeline leveraging Python and Scapy to monitor network interfaces, identify ARP poisoning attacks, detect SYN flood anomalies, and stream instant alerts to a React UI via Socket.io.
+        </p>
+        <ul class="proj-highlights">
+          <li>Automated ARP cache poison detection and broadcast anomaly triggers</li>
+          <li>SYN/FIN/NULL stealth port scan identification algorithms</li>
+          <li>Sub-50ms alert streaming with live packet breakdown and severity grading</li>
+        </ul>
+        <div class="proj-tags">
+          <span class="proj-tag">Python</span>
+          <span class="proj-tag">Scapy</span>
+          <span class="proj-tag">Socket.io</span>
+          <span class="proj-tag">React.js</span>
+          <span class="proj-tag">SecOps Dashboard</span>
+        </div>
+        <div class="proj-actions">
+          <span class="proj-year">// 2024 · SecOps Tooling</span>
+          <a href="https://github.com/adityanegi-hu" target="_blank" class="btn btn-ghost btn-sm">GitHub ↗</a>
+        </div>
+      </div>
+
+      <!-- Project 3: MERN Telemetry Web App -->
+      <div class="proj-card reveal" data-category="fullstack">
+        <div class="proj-top">
+          <span class="proj-id">NET_PROJ // 03</span>
+          <span class="proj-status-badge">HACKATHON WIN</span>
+        </div>
+        <h3 class="proj-title">Real-Time Full-Stack Network Telemetry Platform</h3>
+        <p class="proj-desc">
+          Architected a full-stack web application in 24 hours at the GEHU Tech Geeks Hackathon featuring RESTful endpoints, live host status polling, MongoDB persistence, and secure token-based authentication.
+        </p>
+        <ul class="proj-highlights">
+          <li>Built scalable REST API routes with Express and asynchronous Node.js workers</li>
+          <li>Implemented JWT-based authentication and role-based access control</li>
+          <li>Responsive React frontend rendering dynamic status charts and event feeds</li>
+        </ul>
         <div class="proj-tags">
           <span class="proj-tag">React.js</span>
           <span class="proj-tag">Node.js</span>
           <span class="proj-tag">MongoDB</span>
           <span class="proj-tag">Express</span>
-          <span class="proj-tag">Hackathon</span>
+          <span class="proj-tag">REST API</span>
         </div>
-        <div class="proj-date">// 2024</div>
+        <div class="proj-actions">
+          <span class="proj-year">// 2024 · Hackathon</span>
+          <a href="https://github.com/adityanegi-hu" target="_blank" class="btn btn-ghost btn-sm">Repository ↗</a>
+        </div>
       </div>
 
-      <div class="proj-card reveal">
-        <div class="proj-num">PROJECT_02</div>
-        <div class="proj-title">Caesar Cipher Encryption Project — Python</div>
-        <div class="proj-desc">Developed a Python-based Caesar cipher tool with encryption, decryption, brute-force analysis, and a clean CLI experience for learning and demonstration.</div>
+      <!-- Project 4: Python Cryptographic & CLI Analyzer -->
+      <div class="proj-card reveal" data-category="automation netsec">
+        <div class="proj-top">
+          <span class="proj-id">NET_PROJ // 04</span>
+          <span class="proj-status-badge">CRYPTO UTILITY</span>
+        </div>
+        <h3 class="proj-title">Cryptographic Engine &amp; Brute-Force Frequency Analyzer</h3>
+        <p class="proj-desc">
+          Developed a Python-based cryptographic analyzer featuring Caesar, Vigenère, and substitution encryption engines, entropy calculation, and statistical brute-force frequency analysis.
+        </p>
+        <ul class="proj-highlights">
+          <li>Automated frequency distribution scoring to crack monoalphabetic ciphers</li>
+          <li>Clean interactive CLI interface with support for batch file encryption</li>
+          <li>Benchmarking tool for encryption throughput and key-space entropy</li>
+        </ul>
         <div class="proj-tags">
           <span class="proj-tag">Python</span>
           <span class="proj-tag">Cryptography</span>
           <span class="proj-tag">CLI Tool</span>
+          <span class="proj-tag">Entropy Analysis</span>
         </div>
-        <div class="proj-date">// 2024</div>
-      </div>
-
-      <div class="proj-card reveal">
-        <div class="proj-num">PROJECT_03</div>
-        <div class="proj-title">DPI Firewall — Network Security Tool</div>
-        <div class="proj-desc">Created a Deep Packet Inspection firewall to inspect and filter packets in real time, demonstrating protocol analysis and rule-based network security concepts.</div>
-        <div class="proj-tags">
-          <span class="proj-tag">C++</span>
-          <span class="proj-tag">Linux</span>
-          <span class="proj-tag">Packet Analysis</span>
-          <span class="proj-tag">Security Tooling</span>
+        <div class="proj-actions">
+          <span class="proj-year">// 2024 · Security Research</span>
+          <a href="https://github.com/adityanegi-hu" target="_blank" class="btn btn-ghost btn-sm">GitHub ↗</a>
         </div>
-        <div class="proj-date">// 2024</div>
-      </div>
-
-      <div class="proj-card reveal">
-        <div class="proj-num">PROJECT_04</div>
-        <div class="proj-title">Network Intrusion Detection System</div>
-        <div class="proj-desc">Built a full-stack IDS that uses Python and Scapy to detect scans, brute-force attempts, and ARP spoofing, while streaming alerts to a React dashboard over Socket.io.</div>
-        <div class="proj-tags">
-          <span class="proj-tag">Python</span>
-          <span class="proj-tag">Scapy</span>
-          <span class="proj-tag">MERN</span>
-          <span class="proj-tag">Socket.io</span>
-        </div>
-        <div class="proj-date">// 2024</div>
       </div>
 
     </div>
   </div>
 </section>
 
-<!-- EXPERIENCE -->
+<!-- INTERACTIVE NETWORK UTILITIES (CIDR / SUBNET CALCULATOR) -->
+<section id="tools-section">
+  <div class="container">
+    <div class="section-header reveal">
+      <p class="section-eyebrow">Practical Network Utilities</p>
+      <h2 class="section-title">Live IPv4 CIDR &amp; Subnet Calculator</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="tool-grid reveal">
+      <div class="tool-card">
+        <div class="tool-header">
+          <span>🧮 Interactive CIDR Calculator</span>
+        </div>
+        <p class="tool-sub">Enter any IPv4 address with subnet mask (e.g. <code>192.168.10.45/26</code> or <code>10.0.0.0/16</code>) to calculate network boundaries instantly:</p>
+        
+        <div class="calc-input-group">
+          <input type="text" id="cidr-input" class="calc-input" value="192.168.1.0/24" placeholder="e.g. 192.168.1.0/24"/>
+          <button class="btn btn-primary btn-sm" onclick="calculateSubnet()">Calculate</button>
+        </div>
+
+        <div style="display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap">
+          <span style="font-family:var(--font-mono);font-size:0.68rem;color:var(--text-dim)">Presets:</span>
+          <button class="quick-cmd-btn" onclick="setPreset('192.168.1.0/24')">/24 (Class C)</button>
+          <button class="quick-cmd-btn" onclick="setPreset('172.16.0.0/12')">/12 (Class B)</button>
+          <button class="quick-cmd-btn" onclick="setPreset('10.20.30.0/27')">/27 (Subnet)</button>
+          <button class="quick-cmd-btn" onclick="setPreset('192.168.1.100/30')">/30 (P2P Link)</button>
+        </div>
+
+        <div class="calc-results" id="subnet-results">
+          <div class="res-item">
+            <span class="res-lbl">Network IP:</span>
+            <span class="res-val" id="res-net">192.168.1.0</span>
+          </div>
+          <div class="res-item">
+            <span class="res-lbl">Broadcast IP:</span>
+            <span class="res-val" id="res-bcast">192.168.1.255</span>
+          </div>
+          <div class="res-item">
+            <span class="res-lbl">Subnet Mask:</span>
+            <span class="res-val" id="res-mask">255.255.255.0</span>
+          </div>
+          <div class="res-item">
+            <span class="res-lbl">Wildcard Mask:</span>
+            <span class="res-val" id="res-wild">0.0.0.255</span>
+          </div>
+          <div class="res-item">
+            <span class="res-lbl">Usable Host Range:</span>
+            <span class="res-val" id="res-range">192.168.1.1 - 192.168.1.254</span>
+          </div>
+          <div class="res-item">
+            <span class="res-lbl">Total Usable Hosts:</span>
+            <span class="res-val" id="res-hosts">254 hosts</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Protocol Architecture Quick Reference -->
+      <div class="tool-card">
+        <div class="tool-header">
+          <span>📡 Protocol Quick Reference</span>
+        </div>
+        <p class="tool-sub">Key networking ports, protocols, and standard RFC references mastered for enterprise network design:</p>
+        
+        <div style="display:flex;flex-direction:column;gap:10px;font-family:var(--font-mono);font-size:0.75rem;">
+          <div style="background:#030a13;padding:10px 14px;border-radius:6px;border:1px solid var(--border-subtle);display:flex;justify-content:space-between;">
+            <span style="color:var(--cyan)">BGP (Border Gateway Protocol)</span>
+            <span style="color:var(--text-muted)">Port 179 / TCP · Autonomous Systems</span>
+          </div>
+          <div style="background:#030a13;padding:10px 14px;border-radius:6px;border:1px solid var(--border-subtle);display:flex;justify-content:space-between;">
+            <span style="color:var(--blue)">OSPF (Open Shortest Path First)</span>
+            <span style="color:var(--text-muted)">IP Protocol 89 · Dijkstra SPF</span>
+          </div>
+          <div style="background:#030a13;padding:10px 14px;border-radius:6px;border:1px solid var(--border-subtle);display:flex;justify-content:space-between;">
+            <span style="color:var(--green)">DNS &amp; DHCP</span>
+            <span style="color:var(--text-muted)">Port 53 (UDP/TCP) / Ports 67, 68</span>
+          </div>
+          <div style="background:#030a13;padding:10px 14px;border-radius:6px;border:1px solid var(--border-subtle);display:flex;justify-content:space-between;">
+            <span style="color:var(--amber)">SSH / HTTPS / WireGuard</span>
+            <span style="color:var(--text-muted)">Port 22 / Port 443 / Port 51820 (UDP)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE & TIMELINE -->
 <section id="experience">
   <div class="container">
-    <div class="sec-header reveal">
-      <p class="sec-eyebrow">// 04. Experience</p>
-      <h2 class="sec-title">Work &amp; Hackathons</h2>
-      <div class="sec-line"></div>
+    <div class="section-header reveal">
+      <p class="section-eyebrow">Professional &amp; Hands-On Journey</p>
+      <h2 class="section-title">Experience &amp; Milestones</h2>
+      <div class="section-line"></div>
     </div>
+
     <div class="exp-timeline reveal">
       <div class="exp-item">
-        <div class="exp-date">NOW</div>
-        <div class="exp-title">Developer & Student</div>
+        <div class="exp-date">2024 – PRESENT</div>
+        <div class="exp-role">Developer &amp; Security Researcher</div>
         <div class="exp-org">Playtonyk.com · Graphic Era Hill University, Haldwani</div>
-        <ul class="exp-ul">
-          <li>Building practical projects in web development, networking, and cybersecurity with a strong focus on real-world use cases</li>
-          <li>Working across frontend, backend, and security-focused tools while learning through hands-on implementation</li>
-          <li>Participating in hackathons and technical projects that connect software development with applied security concepts</li>
+        <ul class="exp-list">
+          <li>Architecting real-world tools across network packet filtering, intrusion detection algorithms, and full-stack software.</li>
+          <li>Designing and testing virtual network topologies in Linux, examining packet flow anomalies using Scapy and Wireshark.</li>
+          <li>Building MERN stack platforms with real-time telemetry streaming over WebSockets and secure API design.</li>
+        </ul>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-date">OCTOBER 2024</div>
+        <div class="exp-role">Tech Geeks Hackathon Finalist</div>
+        <div class="exp-org">Graphic Era Hill University Haldwani</div>
+        <ul class="exp-list">
+          <li>Built and deployed an end-to-end full-stack MERN application within an intensive 24-hour sprint.</li>
+          <li>Demonstrated real-time data persistence, authentication, and responsive modern frontend UI to university judges.</li>
+        </ul>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-date">2024</div>
+        <div class="exp-role">CTF &amp; Cybersecurity Solver</div>
+        <div class="exp-org">Capture The Flag Challenges</div>
+        <ul class="exp-list">
+          <li>Solved multiple Capture The Flag (CTF) challenges focusing on network packet forensics, web vulnerabilities, and cryptography.</li>
         </ul>
       </div>
     </div>
   </div>
 </section>
 
-<!-- EDUCATION -->
+<!-- EDUCATION & CERTIFICATIONS -->
 <section id="education">
   <div class="container">
-    <div class="sec-header reveal">
-      <p class="sec-eyebrow">// 05. Education</p>
-      <h2 class="sec-title">Academic Background</h2>
-      <div class="sec-line"></div>
+    <div class="section-header reveal">
+      <p class="section-eyebrow">Academic Foundation</p>
+      <h2 class="section-title">Education &amp; Lab Background</h2>
+      <div class="section-line"></div>
     </div>
-    <div class="edu-list">
-      <div class="edu-card reveal">
-        <div class="edu-icon">🎓</div>
-        <div class="edu-body">
+
+    <div class="edu-grid reveal">
+      
+      <div class="edu-card">
+        <div class="edu-icon-wrap">🎓</div>
+        <div>
           <div class="edu-degree">Bachelor of Computer Applications (BCA)</div>
-          <div class="edu-school">Graphic Era Hill University — Haldwani, Uttarakhand, India</div>
+          <div class="edu-school">Graphic Era Hill University</div>
           <div class="edu-meta">
             <span>📅 July 2025 – June 2027</span>
-            <span>📍 Haldwani, UK</span>
+            <span>📍 Haldwani, Uttarakhand, India</span>
           </div>
+          <p style="font-size:0.85rem;color:var(--text-muted);margin-top:10px;">
+            Focusing on Computer Networks, Operating Systems, Data Structures, Linux Administration, and Web Architecture.
+          </p>
         </div>
       </div>
-      <div class="edu-card reveal">
-        <div class="edu-icon">📚</div>
-        <div class="edu-body">
-          <div class="edu-degree">Higher Secondary Education — 12th Grade</div>
+
+      <div class="edu-card">
+        <div class="edu-icon-wrap">📚</div>
+        <div>
+          <div class="edu-degree">Higher Secondary Education (12th Grade)</div>
           <div class="edu-school">Cynthia Senior Secondary School</div>
           <div class="edu-meta">
             <span>📅 Graduated 2025</span>
+            <span>📍 Haldwani, India</span>
           </div>
+          <p style="font-size:0.85rem;color:var(--text-muted);margin-top:10px;">
+            Strong background in Mathematics, Physics, and foundational Computer Science.
+          </p>
         </div>
       </div>
+
     </div>
   </div>
 </section>
 
-<!-- ACHIEVEMENTS -->
-<section id="achievements">
-  <div class="container">
-    <div class="sec-header reveal">
-      <p class="sec-eyebrow">// 06. Wins</p>
-      <h2 class="sec-title">Achievements</h2>
-      <div class="sec-line"></div>
-    </div>
-    <div class="ach-grid">
-      <div class="ach-card reveal">
-        <div class="ach-icon">🏆</div>
-        <div>
-          <div class="ach-title">Tech Geeks Hackathon Participant</div>
-          <div class="ach-desc">Competed at Graphic Era Hill University, building a complete MERN web application from scratch in 24 hours alongside skilled developers.</div>
-          <div class="ach-year">// Oct 2024 · GEHU Haldwani</div>
-        </div>
-      </div>
-      <div class="ach-card reveal">
-        <div class="ach-icon">🚩</div>
-        <div>
-          <div class="ach-title">CTF Challenges — Multiple Solves</div>
-          <div class="ach-desc">Successfully solved multiple Capture The Flag challenges demonstrating practical cybersecurity skills including vulnerability analysis and exploitation techniques.</div>
-          <div class="ach-year">// 2024 · Cybersecurity</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ABOUT -->
-<section id="about">
-  <div class="container">
-    <div class="about-grid">
-      <div>
-        <div class="sec-header reveal">
-          <p class="sec-eyebrow">// 07. Identity</p>
-          <h2 class="sec-title">About Me</h2>
-          <div class="sec-line"></div>
-        </div>
-        <div class="about-text reveal">
-          <p><strong>Live for real world project!</strong> I’m driven by practical building, hands-on learning, and solving problems with code.</p>
-          <p>I’m currently exploring the intersection of <strong>full-stack development</strong>, <strong>network security</strong>, and <strong>cybersecurity</strong> through projects that range from web apps to intrusion detection systems and security tooling.</p>
-          <p>Whether I’m working on a MERN application or a packet-analysis tool, I focus on creating something useful, reliable, and worth shipping.</p>
-        </div>
-      </div>
-      <div class="reveal">
-        <div class="sec-eyebrow" style="margin-bottom:20px">// Skill Depth</div>
-        <div class="prog-list">
-          <div class="prog-item">
-            <div class="prog-header"><span class="prog-label">🔐 Cybersecurity &amp; CTF</span><span class="prog-pct">65%</span></div>
-            <div class="prog-track"><div class="prog-fill" data-p="65"></div></div>
-          </div>
-          <div class="prog-item">
-            <div class="prog-header"><span class="prog-label">⚛️ React / Node.js (MERN)</span><span class="prog-pct">80%</span></div>
-            <div class="prog-track"><div class="prog-fill" data-p="80"></div></div>
-          </div>
-          <div class="prog-item">
-            <div class="prog-header"><span class="prog-label">🐍 Python</span><span class="prog-pct">75%</span></div>
-            <div class="prog-track"><div class="prog-fill" data-p="75"></div></div>
-          </div>
-          <div class="prog-item">
-            <div class="prog-header"><span class="prog-label">🌐 Web Dev (HTML/CSS/PHP)</span><span class="prog-pct">78%</span></div>
-            <div class="prog-track"><div class="prog-fill" data-p="78"></div></div>
-          </div>
-          <div class="prog-item">
-            <div class="prog-header"><span class="prog-label">🐧 Linux &amp; Shell Scripting</span><span class="prog-pct">70%</span></div>
-            <div class="prog-track"><div class="prog-fill" data-p="70"></div></div>
-          </div>
-          <div class="prog-item">
-            <div class="prog-header"><span class="prog-label">🛡️ C / C++</span><span class="prog-pct">60%</span></div>
-            <div class="prog-track"><div class="prog-fill" data-p="60"></div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CONTACT -->
+<!-- CONTACT & PEERING SECTION -->
 <section id="contact">
-  <div class="container" style="position:relative">
-    <div class="contact-glow"></div>
-    <div class="sec-header reveal">
-      <p class="sec-eyebrow">// 08. Link Up</p>
-      <h2 class="sec-title">Let's Collaborate</h2>
-      <div class="sec-line" style="margin:14px auto 0"></div>
-    </div>
-    <p class="contact-tagline reveal">
-      Actively building practical projects and open to opportunities where I can contribute to secure, scalable, and meaningful products. Let's connect.
-    </p>
-    <div class="contact-links reveal">
-      <a href="mailto:anegi0956@gmail.com" class="c-link email">
-        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-        anegi0956@gmail.com
-      </a>
-      <a href="tel:+917037772016" class="c-link phone">
-        <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
-        +91-7037772016
-      </a>
-      <a href="https://github.com/adityanegi-hu" target="_blank" class="c-link github">
-        <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-        @adityanegi-hu
-      </a>
-      <a href="https://linkedin.com/in/aditya-negi-b04ko" target="_blank" class="c-link linkedin">
-        <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 23.999 23.227 23.999 22.271V1.729C23.999.774 23.2 0 22.222 0h.003z"/></svg>
-        LinkedIn
-      </a>
-      <a href="https://x.com/Adityan12935364" target="_blank" class="c-link twitter">
-        <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.629L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        @Adityan12935364
-      </a>
+  <div class="container">
+    <div class="contact-wrap reveal">
+      <div class="section-header" style="text-align:center">
+        <p class="section-eyebrow" style="justify-content:center">Initiate Connection</p>
+        <h2 class="section-title">Let's Establish a Link</h2>
+        <div class="section-line" style="margin:14px auto 0;"></div>
+      </div>
+
+      <p class="contact-tagline">
+        Interested in collaborating on <strong>network engineering</strong>, <strong>cybersecurity tooling</strong>, or <strong>full-stack development</strong>? My gateway is open.
+      </p>
+
+      <div class="contact-links">
+        <a href="mailto:anegi0956@gmail.com" class="c-btn" id="email-btn" title="Click to open or copy">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          anegi0956@gmail.com
+        </a>
+
+        <a href="tel:+917037772016" class="c-btn">
+          <svg viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+          +91-7037772016
+        </a>
+
+        <a href="https://github.com/adityanegi-hu" target="_blank" class="c-btn">
+          <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+          @adityanegi-hu
+        </a>
+
+        <a href="https://linkedin.com/in/aditya-negi-b04ko" target="_blank" class="c-btn">
+          <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 23.999 23.227 23.999 22.271V1.729C23.999.774 23.2 0 22.222 0h.003z"/></svg>
+          LinkedIn Profile
+        </a>
+
+        <a href="https://x.com/Adityan12935364" target="_blank" class="c-btn">
+          <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.629L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          @Adityan12935364
+        </a>
+      </div>
+
+      <div style="background:#030a13;border:1px solid var(--border-subtle);border-radius:8px;padding:16px;font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim);display:inline-block;">
+        <span style="color:var(--cyan)">SSH-PUBKEY:</span> <code>ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAdityaNegiNetworkKey</code>
+      </div>
     </div>
   </div>
 </section>
 
+<!-- FOOTER -->
 <footer>
-  <div><span>// </span>Built with ❤️ by <span>Aditya Negi</span> · 2025</div>
-  <div class="fr"><span>⚡ Shipping code at orbital velocity</span></div>
+  <div>
+    <span>// Built by <span class="hi">Aditya Negi</span> · 2025</span>
+    <span style="margin-left:14px;color:var(--text-dim)">GEHU Haldwani, Uttarakhand</span>
+  </div>
+  <div>
+    <span>BGP STATUS: <span class="hi">PEERED</span></span> · 
+    <span>PACKET DROP RATE: <span class="hi">0.00%</span></span>
+  </div>
 </footer>
 
 <script>
-
-
-/* === PARTICLES === */
+/* ==========================================================================
+   PARTICLE NETWORK CANVAS (Mesh Topology with dynamic data pulses)
+   ========================================================================== */
 const cvs = document.getElementById('cvs');
 const ctx = cvs.getContext('2d');
-let W, H, pts;
-function resize(){W=cvs.width=innerWidth; H=cvs.height=innerHeight;}
-function mkPts(){
-  pts = Array.from({length:70},()=>({
-    x:Math.random()*W, y:Math.random()*H,
-    vx:(Math.random()-.5)*.25, vy:(Math.random()-.5)*.25,
-    r:Math.random()*1.4+.4, a:Math.random()*.6+.2
+let W, H, nodes;
+
+function resizeCanvas() {
+  W = cvs.width = window.innerWidth;
+  H = cvs.height = window.innerHeight;
+}
+
+function initNetworkNodes() {
+  const count = Math.floor(Math.min(W, 1400) / 18);
+  nodes = Array.from({ length: count }, () => ({
+    x: Math.random() * W,
+    y: Math.random() * H,
+    vx: (Math.random() - 0.5) * 0.4,
+    vy: (Math.random() - 0.5) * 0.4,
+    radius: Math.random() * 1.6 + 0.8,
+    alpha: Math.random() * 0.5 + 0.3,
+    isGateway: Math.random() > 0.88
   }));
 }
-function draw(){
-  ctx.clearRect(0,0,W,H);
-  pts.forEach(p=>{
-    p.x+=p.vx; p.y+=p.vy;
-    if(p.x<0)p.x=W; if(p.x>W)p.x=0;
-    if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+
+function drawNetworkMesh() {
+  ctx.clearRect(0, 0, W, H);
+  
+  // Update and draw nodes
+  nodes.forEach(n => {
+    n.x += n.vx;
+    n.y += n.vy;
+    if (n.x < 0) n.x = W;
+    if (n.x > W) n.x = 0;
+    if (n.y < 0) n.y = H;
+    if (n.y > H) n.y = 0;
+
     ctx.beginPath();
-    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle=`rgba(0,255,224,${p.a*.4})`;
+    ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
+    ctx.fillStyle = n.isGateway ? 'rgba(0, 255, 224, 0.7)' : `rgba(0, 136, 255, ${n.alpha * 0.5})`;
     ctx.fill();
+
+    if (n.isGateway) {
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.radius * 2.5, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(0, 255, 224, 0.15)';
+      ctx.stroke();
+    }
   });
-  for(let i=0;i<pts.length;i++){
-    for(let j=i+1;j<pts.length;j++){
-      const dx=pts[i].x-pts[j].x, dy=pts[i].y-pts[j].y;
-      const d=Math.sqrt(dx*dx+dy*dy);
-      if(d<130){
+
+  // Draw connecting links
+  for (let i = 0; i < nodes.length; i++) {
+    for (let j = i + 1; j < nodes.length; j++) {
+      const dx = nodes[i].x - nodes[j].x;
+      const dy = nodes[i].y - nodes[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 120) {
         ctx.beginPath();
-        ctx.moveTo(pts[i].x,pts[i].y);
-        ctx.lineTo(pts[j].x,pts[j].y);
-        ctx.strokeStyle=`rgba(0,128,255,${.1*(1-d/130)})`;
-        ctx.lineWidth=.5;
+        ctx.moveTo(nodes[i].x, nodes[i].y);
+        ctx.lineTo(nodes[j].x, nodes[j].y);
+        ctx.strokeStyle = `rgba(0, 136, 255, ${0.12 * (1 - dist / 120)})`;
+        ctx.lineWidth = 0.5;
         ctx.stroke();
       }
     }
   }
-  requestAnimationFrame(draw);
+
+  requestAnimationFrame(drawNetworkMesh);
 }
-resize(); mkPts(); draw();
-window.addEventListener('resize',()=>{resize();mkPts();});
 
-/* === SCROLL REVEAL === */
-const revObs = new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('on');revObs.unobserve(e.target);}});
-},{threshold:.1});
-document.querySelectorAll('.reveal').forEach(el=>revObs.observe(el));
+resizeCanvas();
+initNetworkNodes();
+drawNetworkMesh();
+window.addEventListener('resize', () => { resizeCanvas(); initNetworkNodes(); });
 
-/* === PROGRESS BARS === */
-const pgObs = new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){
-      e.target.style.width=e.target.dataset.p+'%';
-      pgObs.unobserve(e.target);
+/* ==========================================================================
+   INTERACTIVE CLI TERMINAL ENGINE
+   ========================================================================== */
+const termOutput = document.getElementById('term-output');
+
+function appendTermLine(cmd, responseLines) {
+  const lineDiv = document.createElement('div');
+  lineDiv.className = 't-line';
+  lineDiv.innerHTML = `<span class="t-prompt">guest@core-gateway:~$ </span><span class="t-cmd">${escapeHtml(cmd)}</span>`;
+  termOutput.appendChild(lineDiv);
+
+  responseLines.forEach(resp => {
+    const rDiv = document.createElement('div');
+    rDiv.className = 't-line t-out';
+    rDiv.innerHTML = resp;
+    termOutput.appendChild(rDiv);
+  });
+
+  termOutput.scrollTop = termOutput.scrollHeight;
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function runCliCmd(cmd) {
+  const cleanCmd = cmd.trim().toLowerCase();
+  
+  if (cleanCmd === 'clear') {
+    termOutput.innerHTML = '';
+    return;
+  }
+
+  let responses = [];
+
+  if (cleanCmd.startsWith('ping')) {
+    responses = [
+      `PING adityanegi-hu.me (10.0.10.80): 56 data bytes`,
+      `64 bytes from 10.0.10.80: icmp_seq=0 ttl=64 time=11.8 ms`,
+      `64 bytes from 10.0.10.80: icmp_seq=1 ttl=64 time=12.1 ms`,
+      `64 bytes from 10.0.10.80: icmp_seq=2 ttl=64 time=11.6 ms`,
+      `--- adityanegi-hu.me ping statistics ---`,
+      `<span class="t-green">3 packets transmitted, 3 received, 0.0% packet loss</span>, rtt min/avg/max = 11.6/11.8/12.1 ms`
+    ];
+  } else if (cleanCmd.startsWith('traceroute') || cleanCmd.startsWith('tracert')) {
+    responses = [
+      `traceroute to adityanegi-hu.me (10.0.10.80), 30 hops max, 60 byte packets`,
+      ` 1  192.168.1.1 (gateway.local)  1.124 ms  1.089 ms`,
+      ` 2  10.0.1.254 (ospf-mesh-core)  4.321 ms  4.298 ms`,
+      ` 3  10.0.1.1 (dpi-firewall-cluster)  7.456 ms  7.412 ms`,
+      ` 4  10.0.10.80 (app-target.adityanegi-hu.me)  <span class="t-accent">11.852 ms</span> [REACHED]`
+    ];
+  } else if (cleanCmd === 'show ip route' || cleanCmd === 'route') {
+    responses = [
+      `<span class="t-warn">S* 0.0.0.0/0</span> [1/0] via 192.168.1.1, eth0 (Default Gateway)`,
+      `<span class="t-accent">O  10.0.0.0/16</span> [110/20] via 10.0.1.254, eth1 (OSPF Core Mesh)`,
+      `<span class="t-blue">B  172.16.0.0/12</span> [20/0] via AS64512 (BGP Border Gateway)`,
+      `<span class="t-green">C  192.168.1.0/24</span> is directly connected, eth0`
+    ];
+  } else if (cleanCmd === 'show interfaces' || cleanCmd === 'ifconfig' || cleanCmd === 'ip a') {
+    responses = [
+      `eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST> mtu 1500`,
+      `        inet 192.168.1.50  netmask 255.255.255.0  broadcast 192.168.1.255`,
+      `        inet6 fe80::a00:27ff:fe4e:66a1  prefixlen 64`,
+      `        ether 08:00:27:4e:66:a1  txqueuelen 1000  (Ethernet)`,
+      `        RX packets 459201  bytes 584920194 (584.9 MB)`,
+      `        TX packets 384912  bytes 412094102 (412.0 MB)`,
+      `wg0: flags=209<UP,POINTOPOINT,RUNNING,NOARP> mtu 1420 (WireGuard VPN)`
+    ];
+  } else if (cleanCmd.startsWith('tcpdump')) {
+    responses = [
+      `listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes`,
+      `<span class="t-accent">09:00:12.451921</span> IP 192.168.1.50.54321 > 10.0.10.80.443: Flags [S], seq 3891283, win 65535`,
+      `<span class="t-green">09:00:12.463812</span> IP 10.0.10.80.443 > 192.168.1.50.54321: Flags [S.], seq 8291024, ack 3891284`,
+      `2 packets captured, 2 packets received by filter`
+    ];
+  } else if (cleanCmd === 'cat skills' || cleanCmd === 'skills') {
+    responses = [
+      `<span class="t-accent">Networking:</span> TCP/IP, OSPF, BGP, VLANs, CIDR/Subnetting, Wireshark, Scapy`,
+      `<span class="t-blue">Security:</span> Deep Packet Inspection, NIDS/NIPS, iptables, Burp Suite, Port Security`,
+      `<span class="t-green">Languages:</span> Python, C++, C, Bash, JavaScript`,
+      `<span class="t-warn">Web/Frameworks:</span> React.js, Node.js, Express, MongoDB, Socket.io`
+    ];
+  } else if (cleanCmd === 'whoami') {
+    responses = [
+      `<span class="t-accent">Aditya Negi</span> — Developer &amp; Network Systems Engineer`,
+      `Undergraduate BCA Student @ Graphic Era Hill University, Haldwani`,
+      `Email: anegi0956@gmail.com | Phone: +91-7037772016`
+    ];
+  } else if (cleanCmd === 'help') {
+    responses = [
+      `Available CLI commands:`,
+      `  <span class="t-accent">ping [host]</span>       - Verify ICMP round-trip latency`,
+      `  <span class="t-accent">traceroute [host]</span> - Trace path hops through gateway &amp; firewall`,
+      `  <span class="t-accent">show ip route</span>     - Inspect routing table (OSPF, BGP, Static)`,
+      `  <span class="t-accent">show interfaces</span>   - Display interface stats (eth0, wg0)`,
+      `  <span class="t-accent">tcpdump</span>           - Live packet sniffer snapshot`,
+      `  <span class="t-accent">skills</span>            - Dump core technical arsenal`,
+      `  <span class="t-accent">whoami</span>            - Output profile metadata`,
+      `  <span class="t-accent">clear</span>             - Clear terminal display`
+    ];
+  } else {
+    responses = [
+      `<span class="t-danger">command not found: ${escapeHtml(cmd)}</span>. Type '<span class="t-accent">help</span>' for list of commands.`
+    ];
+  }
+
+  appendTermLine(cmd, responses);
+}
+
+/* ==========================================================================
+   TOPOLOGY & PACKET SIMULATOR
+   ========================================================================== */
+const animPkt = document.getElementById('anim-pkt');
+const topoLiveLog = document.getElementById('topo-live-log');
+const piL2 = document.getElementById('pi-l2');
+const piL3 = document.getElementById('pi-l3');
+const piL4 = document.getElementById('pi-l4');
+const piL7 = document.getElementById('pi-l7');
+const pktStatusTag = document.getElementById('pkt-status-tag');
+
+function addTopoLog(msg, type = 'info') {
+  const time = new Date().toTimeString().split(' ')[0];
+  const div = document.createElement('div');
+  div.className = 'topo-log-line';
+  
+  let color = 'var(--text-muted)';
+  if (type === 'pass') color = 'var(--green)';
+  if (type === 'drop') color = 'var(--crimson)';
+  if (type === 'warn') color = 'var(--amber)';
+
+  div.innerHTML = `<span class="topo-log-time">[${time}]</span> <span style="color:${color}">${msg}</span>`;
+  topoLiveLog.appendChild(div);
+  topoLiveLog.scrollTop = topoLiveLog.scrollHeight;
+}
+
+function highlightNode(nodeIdx, isDrop = false) {
+  for (let i = 0; i < 5; i++) {
+    const el = document.getElementById(`node-${i}`);
+    if (el) el.classList.remove('active-node', 'drop-node');
+  }
+  const target = document.getElementById(`node-${nodeIdx}`);
+  if (target) {
+    target.classList.add(isDrop ? 'drop-node' : 'active-node');
+  }
+}
+
+function simulatePacket(type) {
+  // Update button active state
+  document.querySelectorAll('.pkt-btn').forEach(btn => btn.classList.remove('active'));
+  if (event && event.currentTarget && event.currentTarget.classList) {
+    event.currentTarget.classList.add('active');
+  }
+
+  const positions = ['0%', '25%', '50%', '75%', '100%'];
+  animPkt.style.opacity = '1';
+  animPkt.style.background = 'var(--cyan)';
+  animPkt.style.boxShadow = '0 0 16px var(--cyan)';
+
+  if (type === 'http') {
+    pktStatusTag.innerText = 'STATUS: IN TRANSIT (HTTP/2)';
+    pktStatusTag.style.color = 'var(--cyan)';
+    piL2.innerText = 'Ethernet II | Src: 00:1A:2B:3C:4D:5E ➔ Dst: 00:14:22:01:23:45';
+    piL3.innerText = 'IPv4 | Src: 192.168.1.50 ➔ Dst: 10.0.10.80 | TTL: 64 | Proto: TCP (6)';
+    piL4.innerText = 'TCP | SrcPort: 54321 ➔ DstPort: 443 | Flags: [PSH, ACK] | Win: 65535';
+    piL7.innerText = 'GET /api/v1/network/telemetry HTTP/1.1 (Payload Verified Clean)';
+    
+    addTopoLog('Client dispatched HTTP GET packet to Edge Gateway.', 'info');
+    animPkt.style.left = positions[0];
+    highlightNode(0);
+
+    setTimeout(() => {
+      animPkt.style.left = positions[1];
+      highlightNode(1);
+      addTopoLog('Edge Gateway routed packet via OSPF Mesh (Next Hop: 10.0.1.1).', 'info');
+    }, 400);
+
+    setTimeout(() => {
+      animPkt.style.left = positions[2];
+      highlightNode(2);
+      addTopoLog('DPI Firewall inspected L7 headers: 0 malicious patterns detected. PASSED.', 'pass');
+    }, 900);
+
+    setTimeout(() => {
+      animPkt.style.left = positions[3];
+      highlightNode(3);
+      addTopoLog('NIDS Sniffer verified traffic integrity. Anomaly score: 0.0.', 'pass');
+    }, 1400);
+
+    setTimeout(() => {
+      animPkt.style.left = positions[4];
+      highlightNode(4);
+      addTopoLog('Target App Server acknowledged with HTTP 200 OK.', 'pass');
+      pktStatusTag.innerText = 'STATUS: DELIVERED (200 OK)';
+      pktStatusTag.style.color = 'var(--green)';
+    }, 1900);
+  } 
+  else if (type === 'malicious_dpi') {
+    pktStatusTag.innerText = 'STATUS: THREAT DETECTED';
+    pktStatusTag.style.color = 'var(--crimson)';
+    piL2.innerText = 'Ethernet II | Src: 00:1A:2B:3C:4D:5E ➔ Dst: 00:14:22:01:23:45';
+    piL3.innerText = 'IPv4 | Src: 192.168.1.50 ➔ Dst: 10.0.10.80 | TTL: 64 | Proto: TCP (6)';
+    piL4.innerText = 'TCP | SrcPort: 48912 ➔ DstPort: 80 | Flags: [PSH, ACK]';
+    piL7.innerText = "POST /login?user=admin' OR 1=1-- HTTP/1.1 [SQL INJECTION DETECTED]";
+    
+    addTopoLog('Malicious packet with SQL injection payload dispatched.', 'warn');
+    animPkt.style.left = positions[0];
+    highlightNode(0);
+
+    setTimeout(() => {
+      animPkt.style.left = positions[1];
+      highlightNode(1);
+      addTopoLog('Edge Router forwarded packet to DPI security inspection ring.', 'info');
+    }, 400);
+
+    setTimeout(() => {
+      animPkt.style.left = positions[2];
+      animPkt.style.background = 'var(--crimson)';
+      animPkt.style.boxShadow = '0 0 20px var(--crimson)';
+      highlightNode(2, true);
+      addTopoLog('DPI FIREWALL RULE TRIGGERED: Regex match on SQLi syntax. PACKET DROPPED!', 'drop');
+      pktStatusTag.innerText = 'STATUS: DROPPED BY FIREWALL (L7 REJECT)';
+      pktStatusTag.style.color = 'var(--crimson)';
+    }, 900);
+  }
+  else if (type === 'syn_scan') {
+    pktStatusTag.innerText = 'STATUS: PORT SCAN PROBE';
+    pktStatusTag.style.color = 'var(--amber)';
+    piL2.innerText = 'Ethernet II | Src: 00:1A:2B:3C:4D:5E ➔ Dst: 00:14:22:01:23:45';
+    piL3.innerText = 'IPv4 | Src: 192.168.1.50 ➔ Dst: 10.0.10.80 | TTL: 48 | Proto: TCP (6)';
+    piL4.innerText = 'TCP | SrcPort: 60124 ➔ DstPort: 22 (SSH) | Flags: [SYN] (Stealth Probe)';
+    piL7.innerText = '[Empty Payload - Port Probe Sequence]';
+    
+    addTopoLog('TCP SYN Stealth Scan initiated towards destination subnet.', 'warn');
+    animPkt.style.left = positions[0];
+    highlightNode(0);
+
+    setTimeout(() => {
+      animPkt.style.left = positions[1];
+      highlightNode(1);
+      addTopoLog('Edge Router observed rapid SYN sequence from 192.168.1.50.', 'info');
+    }, 400);
+
+    setTimeout(() => {
+      animPkt.style.left = positions[2];
+      highlightNode(2);
+      addTopoLog('Firewall allowed handshake initiation under rate-limit rule.', 'info');
+    }, 850);
+
+    setTimeout(() => {
+      animPkt.style.left = positions[3];
+      highlightNode(3, true);
+      addTopoLog('NIDS ALERT: Sequential SYN probe across ports 22, 80, 443 detected. Flagged to SecOps.', 'drop');
+      pktStatusTag.innerText = 'STATUS: FLAGGED BY NIDS';
+    }, 1300);
+  }
+  else if (type === 'icmp_ping') {
+    pktStatusTag.innerText = 'STATUS: ICMP ECHO REQUEST';
+    pktStatusTag.style.color = 'var(--green)';
+    piL2.innerText = 'Ethernet II | Src: 00:1A:2B:3C:4D:5E ➔ Dst: 00:14:22:01:23:45';
+    piL3.innerText = 'IPv4 | Src: 192.168.1.50 ➔ Dst: 10.0.10.80 | TTL: 64 | Proto: ICMP (1)';
+    piL4.innerText = 'ICMP | Type: 8 (Echo Request) | Code: 0 | Checksum: 0x4f2a';
+    piL7.innerText = 'Data: 0xabcdef0123456789 (Ping payload 32 bytes)';
+    
+    addTopoLog('ICMP Echo Request sent. Testing end-to-end hop latency.', 'info');
+    animPkt.style.left = positions[0];
+    highlightNode(0);
+
+    setTimeout(() => { animPkt.style.left = positions[1]; highlightNode(1); }, 300);
+    setTimeout(() => { animPkt.style.left = positions[2]; highlightNode(2); }, 650);
+    setTimeout(() => { animPkt.style.left = positions[3]; highlightNode(3); }, 1000);
+    setTimeout(() => {
+      animPkt.style.left = positions[4];
+      highlightNode(4);
+      addTopoLog('ICMP Echo Reply received back: RTT = 11.8ms (0% loss).', 'pass');
+      pktStatusTag.innerText = 'STATUS: ICMP REPLY OK (11.8ms)';
+    }, 1350);
+  }
+}
+
+/* ==========================================================================
+   CIDR & SUBNET CALCULATOR
+   ========================================================================== */
+function calculateSubnet() {
+  const input = document.getElementById('cidr-input').value.trim();
+  const parts = input.split('/');
+  if (parts.length !== 2) {
+    alert('Please enter a valid CIDR notation, e.g. 192.168.1.0/24');
+    return;
+  }
+
+  const ipStr = parts[0];
+  const cidr = parseInt(parts[1], 10);
+
+  if (isNaN(cidr) || cidr < 0 || cidr > 32) {
+    alert('Subnet mask CIDR must be between 0 and 32');
+    return;
+  }
+
+  const ipParts = ipStr.split('.').map(Number);
+  if (ipParts.length !== 4 || ipParts.some(p => isNaN(p) || p < 0 || p > 255)) {
+    alert('Please enter a valid IPv4 address (e.g. 192.168.1.0)');
+    return;
+  }
+
+  const ipNum = (ipParts[0] << 24) | (ipParts[1] << 16) | (ipParts[2] << 8) | ipParts[3];
+  const maskNum = cidr === 0 ? 0 : (~0 << (32 - cidr)) >>> 0;
+  const wildcardNum = ~maskNum >>> 0;
+
+  const netNum = (ipNum & maskNum) >>> 0;
+  const bcastNum = (netNum | wildcardNum) >>> 0;
+
+  function numToIp(num) {
+    return [(num >>> 24) & 255, (num >>> 16) & 255, (num >>> 8) & 255, num & 255].join('.');
+  }
+
+  const netIp = numToIp(netNum);
+  const bcastIp = numToIp(bcastNum);
+  const maskIp = numToIp(maskNum);
+  const wildIp = numToIp(wildcardNum);
+
+  let hosts = 0;
+  let firstHost = '';
+  let lastHost = '';
+
+  if (cidr === 31) {
+    hosts = 2;
+    firstHost = numToIp(netNum);
+    lastHost = numToIp(bcastNum);
+  } else if (cidr === 32) {
+    hosts = 1;
+    firstHost = lastHost = numToIp(netNum);
+  } else {
+    hosts = Math.max(0, Math.pow(2, 32 - cidr) - 2);
+    firstHost = numToIp(netNum + 1);
+    lastHost = numToIp(bcastNum - 1);
+  }
+
+  document.getElementById('res-net').innerText = netIp;
+  document.getElementById('res-bcast').innerText = bcastIp;
+  document.getElementById('res-mask').innerText = maskIp;
+  document.getElementById('res-wild').innerText = wildIp;
+  document.getElementById('res-range').innerText = `${firstHost} - ${lastHost}`;
+  document.getElementById('res-hosts').innerText = `${hosts.toLocaleString()} usable hosts`;
+}
+
+function setPreset(val) {
+  document.getElementById('cidr-input').value = val;
+  calculateSubnet();
+}
+
+/* ==========================================================================
+   PROJECT FILTERING
+   ========================================================================== */
+function filterProjects(cat) {
+  document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+  if (event && event.currentTarget && event.currentTarget.classList) {
+    event.currentTarget.classList.add('active');
+  }
+
+  const cards = document.querySelectorAll('.proj-card');
+  cards.forEach(card => {
+    const cardCat = card.getAttribute('data-category') || '';
+    if (cat === 'all' || cardCat.includes(cat)) {
+      card.style.display = 'flex';
+    } else {
+      card.style.display = 'none';
     }
   });
-},{threshold:.3});
-document.querySelectorAll('.prog-fill').forEach(f=>pgObs.observe(f));
+}
 
-/* === ACTIVE NAV === */
-const sections = document.querySelectorAll('section[id]');
-const navLinks = document.querySelectorAll('nav a');
-const secObs = new IntersectionObserver(entries=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){
-      navLinks.forEach(l=>l.style.color='');
-      const link = document.querySelector(`nav a[href="#${e.target.id}"]`);
-      if(link) link.style.color='var(--a1)';
+/* ==========================================================================
+   SCROLL REVEAL & NAVIGATION HIGHLIGHTING
+   ========================================================================== */
+const revObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('on');
+      revObserver.unobserve(entry.target);
     }
   });
-},{threshold:.5});
-sections.forEach(s=>secObs.observe(s));
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => revObserver.observe(el));
+
+// Live Simulated Jitter for Ping
+setInterval(() => {
+  const pingEl = document.getElementById('live-ping');
+  if (pingEl) {
+    const pingVal = (11 + Math.random() * 2.5).toFixed(1);
+    pingEl.innerText = `${pingVal}ms`;
+  }
+}, 3000);
 </script>
 </body>
 </html>
